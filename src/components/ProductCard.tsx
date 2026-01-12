@@ -63,10 +63,10 @@ const ProductCard = ({
 
         {/* Price */}
         <div className="flex items-center gap-2 mb-4">
-          <span className="text-xl font-bold text-primary">${price.toFixed(2)}</span>
+          <span className="text-xl font-bold text-primary">KES {price.toLocaleString()}</span>
           {originalPrice && (
             <span className="text-sm text-muted-foreground line-through">
-              ${originalPrice.toFixed(2)}
+              KES {originalPrice.toLocaleString()}
             </span>
           )}
         </div>
