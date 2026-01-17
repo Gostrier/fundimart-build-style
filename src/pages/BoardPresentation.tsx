@@ -1,6 +1,7 @@
 import { Button } from "@/components/ui/button";
 import { Printer, ArrowLeft } from "lucide-react";
 import { Link } from "react-router-dom";
+import jengamartLogo from "@/assets/jengamart-logo.jpg";
 
 const BoardPresentation = () => {
   const handlePrint = () => {
@@ -30,10 +31,11 @@ const BoardPresentation = () => {
         {/* Cover Page */}
         <section className="min-h-[90vh] flex flex-col justify-center items-center text-center mb-16 print:break-after-page print:min-h-screen">
           <div className="space-y-6">
-            <div className="w-24 h-24 bg-primary rounded-2xl flex items-center justify-center mx-auto">
-              <span className="text-4xl font-bold text-primary-foreground">JM</span>
-            </div>
-            <h1 className="text-5xl font-bold text-primary">JengaMart</h1>
+            <img 
+              src={jengamartLogo} 
+              alt="JengaMart Logo" 
+              className="w-48 h-auto mx-auto"
+            />
             <p className="text-2xl text-muted-foreground">Frontend Documentation</p>
             <div className="pt-8">
               <p className="text-xl font-medium">Board Presentation Document</p>
