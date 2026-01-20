@@ -2,6 +2,7 @@ import { Search, ShoppingCart, Menu, User } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { useState } from "react";
+import jengamartLogo from "@/assets/jengamart-logo.jpg";
 
 const Header = () => {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
@@ -21,10 +22,12 @@ const Header = () => {
         {/* Main header */}
         <div className="flex items-center justify-between py-4 gap-4">
           {/* Logo */}
-          <a href="/" className="flex items-center gap-2">
-            <div className="w-10 h-10 bg-primary rounded-lg flex items-center justify-center">
-              <span className="text-primary-foreground font-bold text-xl">J</span>
-            </div>
+          <a href="/" className="flex items-center gap-3">
+            <img 
+              src={jengamartLogo} 
+              alt="JengaMart Logo" 
+              className="h-10 w-auto rounded-lg"
+            />
             <span className="text-2xl font-bold text-foreground">
               Jenga<span className="text-primary">Mart</span>
             </span>
