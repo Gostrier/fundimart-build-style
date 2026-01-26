@@ -1,40 +1,43 @@
 import { Facebook, Twitter, Instagram, Youtube, Mail, Phone, MapPin } from "lucide-react";
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
+import jengamartLogo from "@/assets/jengamart-logo.jpg";
 
 const Footer = () => {
   return (
     <footer className="bg-foreground text-background">
       {/* Newsletter */}
       <div className="border-b border-background/10">
-        <div className="container mx-auto px-4 py-12">
-          <div className="flex flex-col md:flex-row items-center justify-between gap-6">
+        <div className="container mx-auto px-4 py-8 md:py-12">
+          <div className="flex flex-col md:flex-row items-center justify-between gap-6 text-center md:text-left">
             <div>
-              <h3 className="text-2xl font-bold mb-2">Subscribe to Our Newsletter</h3>
-              <p className="text-background/70">Get exclusive deals and updates delivered to your inbox</p>
+              <h3 className="text-xl md:text-2xl font-bold mb-2">Subscribe to Our Newsletter</h3>
+              <p className="text-background/70 text-sm md:text-base">Get exclusive deals and updates delivered to your inbox</p>
             </div>
-            <div className="flex w-full md:w-auto gap-3">
+            <div className="flex flex-col sm:flex-row w-full md:w-auto gap-3">
               <Input
                 type="email"
                 placeholder="Enter your email"
-                className="bg-background/10 border-background/20 text-background placeholder:text-background/50 min-w-[280px]"
+                className="bg-background/10 border-background/20 text-background placeholder:text-background/50 w-full sm:min-w-[280px]"
               />
-              <Button variant="hero">Subscribe</Button>
+              <Button variant="hero" className="w-full sm:w-auto">Subscribe</Button>
             </div>
           </div>
         </div>
       </div>
 
       {/* Main footer */}
-      <div className="container mx-auto px-4 py-12">
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8">
+      <div className="container mx-auto px-4 py-8 md:py-12">
+        <div className="grid grid-cols-2 md:grid-cols-2 lg:grid-cols-4 gap-6 md:gap-8">
           {/* Brand */}
-          <div>
-            <a href="/" className="flex items-center gap-2 mb-6">
-              <div className="w-10 h-10 bg-primary rounded-lg flex items-center justify-center">
-                <span className="text-primary-foreground font-bold text-xl">J</span>
-              </div>
-              <span className="text-2xl font-bold">
+          <div className="col-span-2 md:col-span-1">
+            <a href="/" className="flex items-center gap-3 mb-6">
+              <img 
+                src={jengamartLogo} 
+                alt="JengaMart Logo" 
+                className="h-10 w-auto rounded-lg"
+              />
+              <span className="text-xl md:text-2xl font-bold">
                 Jenga<span className="text-primary">Mart</span>
               </span>
             </a>
