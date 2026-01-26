@@ -2,6 +2,7 @@ import { Search, ShoppingCart, Menu, User } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { useState } from "react";
+import { Link } from "react-router-dom";
 import jengamartLogo from "@/assets/jengamart-logo.jpg";
 
 const Header = () => {
@@ -49,9 +50,11 @@ const Header = () => {
 
           {/* Actions */}
           <div className="flex items-center gap-2">
-            <Button variant="ghost" size="icon" className="hidden md:flex">
-              <User className="w-5 h-5" />
-            </Button>
+            <Link to="/auth">
+              <Button variant="ghost" size="icon" className="hidden md:flex">
+                <User className="w-5 h-5" />
+              </Button>
+            </Link>
             <Button variant="ghost" size="icon" className="relative">
               <ShoppingCart className="w-5 h-5" />
               <span className="absolute -top-1 -right-1 w-5 h-5 bg-accent text-accent-foreground text-xs font-bold rounded-full flex items-center justify-center">
