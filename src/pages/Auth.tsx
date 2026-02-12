@@ -32,11 +32,11 @@ const Auth = () => {
           <Link to="/" className="flex items-center gap-3 w-fit">
             <img 
               src={jengamartLogo} 
-              alt="JengaMart Logo" 
+              alt="FundiMart Logo" 
               className="h-10 w-auto rounded-lg"
             />
             <span className="text-2xl font-bold text-foreground">
-              Jenga<span className="text-primary">Mart</span>
+              Fundi<span className="text-primary">Mart</span>
             </span>
           </Link>
         </div>
@@ -46,7 +46,7 @@ const Auth = () => {
       <div className="flex-1 flex items-center justify-center px-4 py-12">
         <Card className="w-full max-w-md">
           <CardHeader className="text-center">
-            <CardTitle className="text-2xl font-bold">Welcome to JengaMart</CardTitle>
+            <CardTitle className="text-2xl font-bold">Welcome to FundiMart</CardTitle>
             <CardDescription>
               Kenya's premier construction materials marketplace
             </CardDescription>
@@ -263,7 +263,7 @@ const Auth = () => {
       {/* Footer */}
       <footer className="bg-background border-t border-border py-4">
         <div className="container mx-auto px-4 text-center text-sm text-muted-foreground">
-          © 2024 JengaMart. All rights reserved.
+          © 2024 FundiMart. All rights reserved.
         </div>
       </footer>
     </div>
