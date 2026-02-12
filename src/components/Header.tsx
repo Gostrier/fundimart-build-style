@@ -26,11 +26,11 @@ const Header = () => {
           <a href="/" className="flex items-center gap-3">
             <img 
               src={jengamartLogo} 
-              alt="JengaMart Logo" 
+              alt="FundiMart Logo" 
               className="h-10 w-auto rounded-lg"
             />
             <span className="text-2xl font-bold text-foreground">
-              Jenga<span className="text-primary">Mart</span>
+              Fundi<span className="text-primary">Mart</span>
             </span>
           </a>
 

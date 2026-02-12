@@ -34,11 +34,11 @@ const Footer = () => {
             <a href="/" className="flex items-center gap-3 mb-6">
               <img 
                 src={jengamartLogo} 
-                alt="JengaMart Logo" 
+                alt="FundiMart Logo" 
                 className="h-10 w-auto rounded-lg"
               />
               <span className="text-xl md:text-2xl font-bold">
-                Jenga<span className="text-primary">Mart</span>
+                Fundi<span className="text-primary">Mart</span>
               </span>
             </a>
             <p className="text-background/70 mb-6">
@@ -94,11 +94,11 @@ const Footer = () => {
               </li>
               <li className="flex items-center gap-3">
                 <Phone className="w-5 h-5 text-primary" />
-                <span className="text-background/70">1-800-JENGA-MART</span>
+                <span className="text-background/70">1-800-FUNDI-MART</span>
               </li>
               <li className="flex items-center gap-3">
                 <Mail className="w-5 h-5 text-primary" />
-                <span className="text-background/70">support@jengamart.com</span>
+                <span className="text-background/70">support@fundimart.com</span>
               </li>
             </ul>
           </div>
@@ -109,7 +109,7 @@ const Footer = () => {
       <div className="border-t border-background/10">
         <div className="container mx-auto px-4 py-6">
           <div className="flex flex-col md:flex-row items-center justify-between gap-4 text-sm text-background/60">
-            <p>© 2024 JengaMart. All rights reserved.</p>
+            <p>© 2024 FundiMart. All rights reserved.</p>
             <div className="flex gap-6">
               <a href="#" className="hover:text-primary transition-colors">Privacy Policy</a>
               <a href="#" className="hover:text-primary transition-colors">Terms of Service</a>

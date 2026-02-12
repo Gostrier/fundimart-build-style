@@ -33,7 +33,7 @@ const BoardPresentation = () => {
           <div className="space-y-6">
             <img 
               src={jengamartLogo} 
-              alt="JengaMart Logo" 
+              alt="FundiMart Logo" 
               className="w-48 h-auto mx-auto"
             />
             <p className="text-2xl text-muted-foreground">Frontend Documentation</p>
@@ -48,7 +48,7 @@ const BoardPresentation = () => {
         <section className="mb-12 print:break-after-page">
           <h2 className="text-3xl font-bold text-primary mb-6 pb-2 border-b">1. Executive Summary</h2>
           <p className="text-lg leading-relaxed mb-6">
-            <strong>JengaMart</strong> is a modern e-commerce web application designed specifically for the 
+            <strong>FundiMart</strong> is a modern e-commerce web application designed specifically for the 
             Kenyan construction materials and tools market. The platform provides a seamless online shopping 
             experience for contractors, builders, and DIY enthusiasts looking to purchase construction supplies.
           </p>
@@ -303,7 +303,7 @@ const BoardPresentation = () => {
 
         {/* Footer */}
         <section className="text-center py-12 border-t">
-          <p className="text-muted-foreground">Document prepared for JengaMart Board Presentation</p>
+          <p className="text-muted-foreground">Document prepared for FundiMart Board Presentation</p>
           <p className="text-sm text-muted-foreground mt-1">Generated: January 2026</p>
         </section>
       </div>
