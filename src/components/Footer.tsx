@@ -1,7 +1,7 @@
 import { Facebook, Twitter, Instagram, Youtube, Mail, Phone, MapPin } from "lucide-react";
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
-import jengamartLogo from "@/assets/jengamart-logo.jpg";
+import fundimartLogo from "@/assets/fundimart-logo.jpeg";
 
 const Footer = () => {
   return (
@@ -33,7 +33,7 @@ const Footer = () => {
           <div className="col-span-2 md:col-span-1">
             <a href="/" className="flex items-center gap-3 mb-6">
               <img 
-                src={jengamartLogo} 
+                src={fundimartLogo} 
                 alt="FundiMart Logo" 
                 className="h-10 w-auto rounded-lg"
               />
