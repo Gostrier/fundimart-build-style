@@ -3,7 +3,7 @@ import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { useState } from "react";
 import { Link } from "react-router-dom";
-import jengamartLogo from "@/assets/jengamart-logo.jpg";
+import fundimartLogo from "@/assets/fundimart-logo.jpeg";
 
 const Header = () => {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
@@ -25,7 +25,7 @@ const Header = () => {
           {/* Logo */}
           <a href="/" className="flex items-center gap-3">
             <img 
-              src={jengamartLogo} 
+              src={fundimartLogo} 
               alt="FundiMart Logo" 
               className="h-10 w-auto rounded-lg"
             />
