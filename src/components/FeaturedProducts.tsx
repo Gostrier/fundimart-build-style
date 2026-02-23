@@ -5,7 +5,7 @@ import { ArrowRight } from "lucide-react";
 const products = [
   // Cement
   {
-    image: "https://images.unsplash.com/photo-1518709766631-a6a7f45921c3?w=400&h=400&fit=crop",
+    image: "https://images.unsplash.com/photo-1585771724684-38269d6639fd?w=400&h=400&fit=crop",
     name: "Bamburi Nguvu Cement 50kg",
     price: 885,
     rating: 4.8,
@@ -13,7 +13,7 @@ const products = [
     badge: "Best Seller",
   },
   {
-    image: "https://images.unsplash.com/photo-1587582423116-ec07293f0395?w=400&h=400&fit=crop",
+    image: "https://images.unsplash.com/photo-1590074072786-a66914d668f1?w=400&h=400&fit=crop",
     name: "Simba Cement 32.5R 50kg",
     price: 950,
     originalPrice: 1050,
@@ -23,7 +23,7 @@ const products = [
   },
   // Steel
   {
-    image: "https://images.unsplash.com/photo-1474631245212-32dc3c8310c6?w=400&h=400&fit=crop",
+    image: "https://images.unsplash.com/photo-1530982011887-3cc11cc85693?w=400&h=400&fit=crop",
     name: "Deformed Steel Bar D12 (12m)",
     price: 1150,
     originalPrice: 1300,
@@ -32,7 +32,7 @@ const products = [
     badge: "Hot Deal",
   },
   {
-    image: "https://images.unsplash.com/photo-1590074072786-a66914d668f1?w=400&h=400&fit=crop",
+    image: "https://images.unsplash.com/photo-1567789884554-0b844b597180?w=400&h=400&fit=crop",
     name: "High Tensile Steel 16mm (per kg)",
     price: 145,
     rating: 4.6,
@@ -40,14 +40,14 @@ const products = [
   },
   // Timber
   {
-    image: "https://images.unsplash.com/photo-1558618666-fcd25c85cd64?w=400&h=400&fit=crop",
+    image: "https://images.unsplash.com/photo-1520333789090-1afc82db536a?w=400&h=400&fit=crop",
     name: "Cypress Timber 4×2 (per ft)",
     price: 55,
     rating: 4.5,
     reviews: 234,
   },
   {
-    image: "https://images.unsplash.com/photo-1520333789090-1afc82db536a?w=400&h=400&fit=crop",
+    image: "https://images.unsplash.com/photo-1558618666-fcd25c85cd64?w=400&h=400&fit=crop",
     name: "Pine Timber 4×2 (per ft)",
     price: 38,
     rating: 4.4,
@@ -56,7 +56,7 @@ const products = [
   },
   // Plumbing
   {
-    image: "https://images.unsplash.com/photo-1585771724684-38269d6639fd?w=400&h=400&fit=crop",
+    image: "https://images.unsplash.com/photo-1504328345606-18bbc8c9d7d1?w=400&h=400&fit=crop",
     name: "PVC Pipe 110mm (6m)",
     price: 2730,
     rating: 4.7,
@@ -65,7 +65,7 @@ const products = [
   },
   // Aggregates
   {
-    image: "https://images.unsplash.com/photo-1578662996442-48f60103fc96?w=400&h=400&fit=crop",
+    image: "https://images.unsplash.com/photo-1517089596392-fb9a9033e05b?w=400&h=400&fit=crop",
     name: "Ballast / Coarse Aggregate (per m³)",
     price: 4467,
     rating: 4.8,

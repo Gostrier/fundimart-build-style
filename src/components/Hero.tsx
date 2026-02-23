@@ -31,7 +31,7 @@ const Hero = () => {
           <div className="relative hidden md:block">
             <div className="absolute inset-0 bg-primary/10 rounded-3xl rotate-6"></div>
             <img
-              src="https://images.unsplash.com/photo-1504307651254-35680f356dfd?w=600&h=500&fit=crop"
+              src="https://images.unsplash.com/photo-1541888946425-d81bb19240f5?w=600&h=500&fit=crop"
               alt="Construction worker with tools"
               className="relative rounded-3xl shadow-2xl object-cover w-full h-[350px] lg:h-[500px]"
             />
