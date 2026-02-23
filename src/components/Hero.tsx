@@ -11,8 +11,8 @@ const Hero = () => {
               🏗️ New Season Sale - Up to 30% Off
             </span>
             <h1 className="text-3xl sm:text-4xl md:text-5xl lg:text-6xl font-bold text-foreground mb-4 md:mb-6 leading-tight">
-              Build Your Dreams with
-              <span className="text-primary block">Quality Materials</span>
+              Built With Trust,
+              <span className="text-primary block">Delivered With Excellence</span>
             </h1>
             <p className="text-base md:text-lg text-muted-foreground mb-6 md:mb-8 max-w-lg mx-auto md:mx-0">
               Your one-stop shop for premium construction materials, professional tools, and expert advice. From foundation to finish.
