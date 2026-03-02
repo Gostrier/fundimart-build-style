@@ -1,42 +1,13 @@
 import { Hammer, Wrench, Zap, Droplets, HardHat, Ruler } from "lucide-react";
+import { Link } from "react-router-dom";
 
-const categories = [
-  {
-    icon: Hammer,
-    name: "Building Materials",
-    count: "2,450+ items",
-    color: "bg-orange-100 text-orange-600",
-  },
-  {
-    icon: Wrench,
-    name: "Power Tools",
-    count: "890+ items",
-    color: "bg-blue-100 text-blue-600",
-  },
-  {
-    icon: Ruler,
-    name: "Hand Tools",
-    count: "1,200+ items",
-    color: "bg-green-100 text-green-600",
-  },
-  {
-    icon: Droplets,
-    name: "Plumbing",
-    count: "650+ items",
-    color: "bg-cyan-100 text-cyan-600",
-  },
-  {
-    icon: Zap,
-    name: "Electrical",
-    count: "780+ items",
-    color: "bg-yellow-100 text-yellow-600",
-  },
-  {
-    icon: HardHat,
-    name: "Safety Gear",
-    count: "420+ items",
-    color: "bg-red-100 text-red-600",
-  },
+const categoryItems = [
+  { icon: Hammer, name: "Building Materials", count: "2,450+ items", color: "bg-orange-100 text-orange-600", slug: "building-materials" },
+  { icon: Wrench, name: "Power Tools", count: "890+ items", color: "bg-blue-100 text-blue-600", slug: "power-tools" },
+  { icon: Ruler, name: "Hand Tools", count: "1,200+ items", color: "bg-green-100 text-green-600", slug: "hand-tools" },
+  { icon: Droplets, name: "Plumbing", count: "650+ items", color: "bg-cyan-100 text-cyan-600", slug: "plumbing" },
+  { icon: Zap, name: "Electrical", count: "780+ items", color: "bg-yellow-100 text-yellow-600", slug: "electrical" },
+  { icon: HardHat, name: "Safety Gear", count: "420+ items", color: "bg-red-100 text-red-600", slug: "safety-gear" },
 ];
 
 const Categories = () => {
@@ -53,10 +24,10 @@ const Categories = () => {
         </div>
 
         <div className="grid grid-cols-3 sm:grid-cols-3 md:grid-cols-6 gap-3 md:gap-4">
-          {categories.map((category, index) => (
-            <a
+          {categoryItems.map((category, index) => (
+            <Link
               key={index}
-              href="#"
+              to={`/category/${category.slug}`}
               className="group bg-card rounded-xl md:rounded-2xl p-3 md:p-6 border border-border hover:border-primary hover:shadow-lg transition-all duration-300 text-center"
             >
               <div className={`w-10 h-10 md:w-16 md:h-16 mx-auto rounded-xl md:rounded-2xl ${category.color} flex items-center justify-center mb-2 md:mb-4 group-hover:scale-110 transition-transform`}>
@@ -66,7 +37,7 @@ const Categories = () => {
                 {category.name}
               </h3>
               <p className="text-[10px] md:text-sm text-muted-foreground hidden sm:block">{category.count}</p>
-            </a>
+            </Link>
           ))}
         </div>
       </div>
