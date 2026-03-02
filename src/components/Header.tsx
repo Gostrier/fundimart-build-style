@@ -1,9 +1,10 @@
-import { Search, ShoppingCart, Menu, User } from "lucide-react";
+import { Search, Menu, User } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { useState } from "react";
 import { Link } from "react-router-dom";
 import fundimartLogo from "@/assets/fundimart-logo.jpeg";
+import CartSheet from "@/components/CartSheet";
 
 const Header = () => {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
@@ -55,12 +56,7 @@ const Header = () => {
                 <User className="w-5 h-5" />
               </Button>
             </Link>
-            <Button variant="ghost" size="icon" className="relative">
-              <ShoppingCart className="w-5 h-5" />
-              <span className="absolute -top-1 -right-1 w-5 h-5 bg-accent text-accent-foreground text-xs font-bold rounded-full flex items-center justify-center">
-                3
-              </span>
-            </Button>
+            <CartSheet />
             <Button
               variant="ghost"
               size="icon"
