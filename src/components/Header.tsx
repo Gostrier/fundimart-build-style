@@ -1,4 +1,4 @@
-import { Search, Menu, User } from "lucide-react";
+import { Search, Menu, User, Settings } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { useState } from "react";
@@ -51,6 +51,11 @@ const Header = () => {
 
           {/* Actions */}
           <div className="flex items-center gap-2">
+            <Link to="/admin/dashboard">
+              <Button variant="ghost" size="icon" className="hidden md:flex" title="Admin Dashboard">
+                <Settings className="w-5 h-5" />
+              </Button>
+            </Link>
             <Link to="/auth">
               <Button variant="ghost" size="icon" className="hidden md:flex">
                 <User className="w-5 h-5" />
@@ -90,6 +95,10 @@ const Header = () => {
               <Search className="absolute right-4 top-1/2 -translate-y-1/2 w-5 h-5 text-muted-foreground" />
             </div>
             <nav className="flex flex-col gap-3">
+              <Link to="/admin/dashboard" className="font-medium text-primary transition-colors py-2 flex items-center gap-2">
+                <Settings className="w-4 h-4" />
+                Admin Dashboard
+              </Link>
               <Link to="/category/building-materials" className="font-medium text-foreground hover:text-primary transition-colors py-2">Building Materials</Link>
               <Link to="/category/power-tools" className="font-medium text-foreground hover:text-primary transition-colors py-2">Power Tools</Link>
               <Link to="/category/hand-tools" className="font-medium text-foreground hover:text-primary transition-colors py-2">Hand Tools</Link>
