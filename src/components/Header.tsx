@@ -74,12 +74,12 @@ const Header = () => {
 
         {/* Navigation - desktop */}
         <nav className="hidden md:flex items-center gap-8 py-3">
-          <a href="#" className="font-medium text-foreground hover:text-primary transition-colors">Building Materials</a>
-          <a href="#" className="font-medium text-foreground hover:text-primary transition-colors">Power Tools</a>
-          <a href="#" className="font-medium text-foreground hover:text-primary transition-colors">Hand Tools</a>
-          <a href="#" className="font-medium text-foreground hover:text-primary transition-colors">Plumbing</a>
-          <a href="#" className="font-medium text-foreground hover:text-primary transition-colors">Electrical</a>
-          <a href="#" className="font-medium text-foreground hover:text-primary transition-colors">Safety Gear</a>
+          <Link to="/category/building-materials" className="font-medium text-foreground hover:text-primary transition-colors">Building Materials</Link>
+          <Link to="/category/power-tools" className="font-medium text-foreground hover:text-primary transition-colors">Power Tools</Link>
+          <Link to="/category/hand-tools" className="font-medium text-foreground hover:text-primary transition-colors">Hand Tools</Link>
+          <Link to="/category/plumbing" className="font-medium text-foreground hover:text-primary transition-colors">Plumbing</Link>
+          <Link to="/category/electrical" className="font-medium text-foreground hover:text-primary transition-colors">Electrical</Link>
+          <Link to="/category/safety-gear" className="font-medium text-foreground hover:text-primary transition-colors">Safety Gear</Link>
         </nav>
 
         {/* Mobile menu */}
@@ -94,12 +94,12 @@ const Header = () => {
               <Search className="absolute right-4 top-1/2 -translate-y-1/2 w-5 h-5 text-muted-foreground" />
             </div>
             <nav className="flex flex-col gap-3">
-              <a href="#" className="font-medium text-foreground hover:text-primary transition-colors py-2">Building Materials</a>
-              <a href="#" className="font-medium text-foreground hover:text-primary transition-colors py-2">Power Tools</a>
-              <a href="#" className="font-medium text-foreground hover:text-primary transition-colors py-2">Hand Tools</a>
-              <a href="#" className="font-medium text-foreground hover:text-primary transition-colors py-2">Plumbing</a>
-              <a href="#" className="font-medium text-foreground hover:text-primary transition-colors py-2">Electrical</a>
-              <a href="#" className="font-medium text-foreground hover:text-primary transition-colors py-2">Safety Gear</a>
+              <Link to="/category/building-materials" className="font-medium text-foreground hover:text-primary transition-colors py-2">Building Materials</Link>
+              <Link to="/category/power-tools" className="font-medium text-foreground hover:text-primary transition-colors py-2">Power Tools</Link>
+              <Link to="/category/hand-tools" className="font-medium text-foreground hover:text-primary transition-colors py-2">Hand Tools</Link>
+              <Link to="/category/plumbing" className="font-medium text-foreground hover:text-primary transition-colors py-2">Plumbing</Link>
+              <Link to="/category/electrical" className="font-medium text-foreground hover:text-primary transition-colors py-2">Electrical</Link>
+              <Link to="/category/safety-gear" className="font-medium text-foreground hover:text-primary transition-colors py-2">Safety Gear</Link>
             </nav>
           </div>
         )}
