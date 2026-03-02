@@ -75,6 +75,7 @@ const Header = () => {
 
         {/* Navigation - desktop */}
         <nav className="hidden md:flex items-center gap-8 py-3">
+          <Link to="/admin/dashboard" className="font-bold text-primary bg-primary/10 px-3 py-1 rounded hover:bg-primary/20 transition-colors">🔧 ADMIN</Link>
           <Link to="/category/building-materials" className="font-medium text-foreground hover:text-primary transition-colors">Building Materials</Link>
           <Link to="/category/power-tools" className="font-medium text-foreground hover:text-primary transition-colors">Power Tools</Link>
           <Link to="/category/hand-tools" className="font-medium text-foreground hover:text-primary transition-colors">Hand Tools</Link>
