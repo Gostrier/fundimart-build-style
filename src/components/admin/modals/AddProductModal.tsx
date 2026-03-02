@@ -42,16 +42,31 @@ export default function AddProductModal({ onClose, onSubmit }: AddProductModalPr
   });
 
   const handleSubmit = () => {
-    if (!formData.name || !formData.category || !formData.price || !formData.stock) {
-      alert('Please fill in all fields');
+    // Validate inputs
+    if (!formData.name.trim()) {
+      alert("Please enter a product name");
+      return;
+    }
+    if (!formData.category) {
+      alert("Please select a category");
+      return;
+    }
+    const price = parseFloat(formData.price);
+    if (!formData.price || isNaN(price) || price <= 0) {
+      alert("Please enter a valid price (must be greater than 0)");
+      return;
+    }
+    const stock = parseInt(formData.stock);
+    if (formData.stock === "" || isNaN(stock) || stock < 0) {
+      alert("Please enter a valid stock quantity");
       return;
     }
 
     onSubmit({
       name: formData.name,
       category: formData.category,
-      price: parseFloat(formData.price),
-      stock: parseInt(formData.stock),
+      price,
+      stock,
       status: formData.status,
     });
   };
