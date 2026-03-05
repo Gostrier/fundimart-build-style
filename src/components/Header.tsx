@@ -5,6 +5,7 @@ import { useState } from "react";
 import { Link } from "react-router-dom";
 import fundimartLogo from "@/assets/fundimart-logo.jpeg";
 import CartSheet from "@/components/CartSheet";
+import ThemeToggle from "@/components/ThemeToggle";
 
 const Header = () => {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
@@ -51,6 +52,7 @@ const Header = () => {
 
           {/* Actions */}
           <div className="flex items-center gap-2">
+            <ThemeToggle />
             <Link to="/admin/dashboard">
               <Button variant="ghost" size="icon" className="hidden md:flex" title="Admin Dashboard">
                 <Settings className="w-5 h-5" />

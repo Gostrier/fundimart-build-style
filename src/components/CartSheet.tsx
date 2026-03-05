@@ -1,6 +1,7 @@
 import { useCart } from "@/contexts/CartContext";
 import { Button } from "@/components/ui/button";
 import { Minus, Plus, Trash2, ShoppingBag } from "lucide-react";
+import { useState } from "react";
 import {
   Sheet,
   SheetContent,
@@ -8,9 +9,11 @@ import {
   SheetTitle,
   SheetTrigger,
 } from "@/components/ui/sheet";
+import CheckoutDialog from "@/components/CheckoutDialog";
 
 const CartSheet = () => {
   const { items, removeFromCart, updateQuantity, totalItems, totalPrice, clearCart } = useCart();
+  const [isCheckoutOpen, setIsCheckoutOpen] = useState(false);
 
   return (
     <Sheet>
@@ -87,13 +90,18 @@ const CartSheet = () => {
                 <span className="text-muted-foreground">Subtotal</span>
                 <span className="font-bold text-foreground">KES {totalPrice.toLocaleString()}</span>
               </div>
-              <Button className="w-full" size="lg">
+              <Button 
+                className="w-full" 
+                size="lg"
+                onClick={() => setIsCheckoutOpen(true)}
+              >
                 Checkout — KES {totalPrice.toLocaleString()}
               </Button>
               <Button variant="outline" className="w-full" onClick={clearCart}>
                 Clear Cart
               </Button>
             </div>
+            <CheckoutDialog isOpen={isCheckoutOpen} onOpenChange={setIsCheckoutOpen} />
           </>
         )}
       </SheetContent>
