@@ -1,7 +1,7 @@
 import { Button } from "@/components/ui/button";
 import { Printer, ArrowLeft } from "lucide-react";
 import { Link } from "react-router-dom";
-import jengamartLogo from "@/assets/jengamart-logo.jpg";
+import fundimartLogo from "@/assets/fundimart-logo.jpeg";
 
 const BoardPresentation = () => {
   const handlePrint = () => {
@@ -32,7 +32,7 @@ const BoardPresentation = () => {
         <section className="min-h-[90vh] flex flex-col justify-center items-center text-center mb-16 print:break-after-page print:min-h-screen">
           <div className="space-y-6">
             <img 
-              src={jengamartLogo} 
+              src={fundimartLogo} 
               alt="FundiMart Logo" 
               className="w-48 h-auto mx-auto"
             />

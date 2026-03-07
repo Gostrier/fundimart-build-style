@@ -15,7 +15,7 @@ const Header = () => {
       <div className="container mx-auto px-4">
         {/* Top bar */}
         <div className="hidden md:flex items-center justify-between py-2 text-sm border-b border-border">
-          <span className="text-muted-foreground">Free delivery on orders over $500</span>
+          <span className="text-muted-foreground">Enjoy your shopping experience with FundiMart</span>
           <div className="flex items-center gap-4">
             <a href="#" className="text-muted-foreground hover:text-primary transition-colors">Help Center</a>
             <a href="#" className="text-muted-foreground hover:text-primary transition-colors">Track Order</a>

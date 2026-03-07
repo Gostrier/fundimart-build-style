@@ -8,7 +8,7 @@ import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { Eye, EyeOff, Mail, Lock, User, Phone, Building, MapPin } from "lucide-react";
 import { Link } from "react-router-dom";
 import { useAuth } from "@/contexts/AuthContext";
-import jengamartLogo from "@/assets/jengamart-logo.jpg";
+import fundimartLogo from "@/assets/fundimart-logo.jpeg";
 
 const Auth = () => {
   const navigate = useNavigate();
@@ -104,7 +104,7 @@ const Auth = () => {
         <div className="container mx-auto px-4">
           <Link to="/" className="flex items-center gap-3 w-fit">
             <img 
-              src={jengamartLogo} 
+              src={fundimartLogo} 
               alt="FundiMart Logo" 
               className="h-10 w-auto rounded-lg"
             />

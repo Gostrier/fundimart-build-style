@@ -1,22 +1,16 @@
-# Welcome to your Lovable project
+# Welcome to FundiMart
 
 ## Project info
 
-**URL**: https://lovable.dev/projects/REPLACE_WITH_PROJECT_ID
+**FundiMart** is a comprehensive construction materials and professional tools e-commerce platform built with modern web technologies.
 
 ## How can I edit this code?
 
 There are several ways of editing your application.
 
-**Use Lovable**
-
-Simply visit the [Lovable Project](https://lovable.dev/projects/REPLACE_WITH_PROJECT_ID) and start prompting.
-
-Changes made via Lovable will be committed automatically to this repo.
-
 **Use your preferred IDE**
 
-If you want to work locally using your own IDE, you can clone this repo and push changes. Pushed changes will also be reflected in Lovable.
+If you want to work locally using your own IDE, you can clone this repo and push changes. Your local development environment will be set up to match the production configuration.
 
 The only requirement is having Node.js & npm installed - [install with nvm](https://github.com/nvm-sh/nvm#installing-and-updating)
 
@@ -62,12 +56,22 @@ This project is built with:
 
 ## How can I deploy this project?
 
-Simply open [Lovable](https://lovable.dev/projects/REPLACE_WITH_PROJECT_ID) and click on Share -> Publish.
+You can deploy this project to various hosting platforms:
 
-## Can I connect a custom domain to my Lovable project?
+- **Vercel**: Connect your GitHub repository and deploy with automatic previews
+- **Netlify**: Deploy via GitHub integration for seamless updates
+- **Docker**: Build and deploy using the provided Vite build configuration
+- **Traditional Hosting**: Build with `npm run build` and upload the `dist` folder to your server
 
-Yes, you can!
+For production deployments, ensure all environment variables are properly configured.
 
-To connect a domain, navigate to Project > Settings > Domains and click Connect Domain.
+## Project Features
 
-Read more here: [Setting up a custom domain](https://docs.lovable.dev/features/custom-domain#custom-domain)
+- **Product Catalog**: Browse building materials, power tools, hand tools, plumbing, electrical, and safety gear
+- **Shopping Cart**: Add products to cart with dynamic pricing
+- **User Authentication**: Secure login and registration system
+- **Admin Dashboard**: Manage products, orders, and store settings
+- **Seller Dashboard**: Tools for sellers to manage their products
+- **Responsive Design**: Optimized for desktop, tablet, and mobile devices
+- **Dark Mode Support**: Theme toggle for user preference
+- **Search Functionality**: Find products quickly with search feature
