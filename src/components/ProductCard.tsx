@@ -2,6 +2,7 @@ import { ShoppingCart, Heart, Star } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { useCart } from "@/contexts/CartContext";
 import { toast } from "sonner";
+import { useState } from "react";
 
 interface ProductCardProps {
   image: string;
@@ -23,10 +24,20 @@ const ProductCard = ({
   badge,
 }: ProductCardProps) => {
   const { addToCart } = useCart();
+  const [isFavorited, setIsFavorited] = useState(false);
 
   const handleAddToCart = () => {
     addToCart({ image, name, price });
     toast.success(`${name} added to cart`);
+  };
+
+  const handleToggleFavorite = () => {
+    setIsFavorited(!isFavorited);
+    if (!isFavorited) {
+      toast.success(`${name} added to favorites`);
+    } else {
+      toast.info(`${name} removed from favorites`);
+    }
   };
 
   return (
@@ -38,8 +49,17 @@ const ProductCard = ({
             {badge}
           </span>
         )}
-        <button className="absolute top-2 right-2 md:top-3 md:right-3 z-10 w-8 h-8 md:w-10 md:h-10 bg-background/80 backdrop-blur-sm rounded-full flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity hover:bg-background">
-          <Heart className="w-4 h-4 md:w-5 md:h-5 text-muted-foreground hover:text-primary transition-colors" />
+        <button 
+          onClick={handleToggleFavorite}
+          className="absolute top-2 right-2 md:top-3 md:right-3 z-10 w-8 h-8 md:w-10 md:h-10 bg-background/80 backdrop-blur-sm rounded-full flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity hover:bg-background"
+        >
+          <Heart 
+            className={`w-4 h-4 md:w-5 md:h-5 transition-colors ${
+              isFavorited 
+                ? 'fill-primary text-primary' 
+                : 'text-muted-foreground hover:text-primary'
+            }`} 
+          />
         </button>
         <img
           src={image}

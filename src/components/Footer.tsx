@@ -1,6 +1,7 @@
 import { Facebook, Twitter, Instagram, Youtube, Mail, Phone, MapPin } from "lucide-react";
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
+import { Link } from "react-router-dom";
 import fundimartLogo from "@/assets/fundimart-logo.jpeg";
 
 const Footer = () => {
@@ -45,16 +46,16 @@ const Footer = () => {
               Your trusted partner for quality construction materials and professional tools since 2026.
             </p>
             <div className="flex gap-4">
-              <a href="#" className="w-10 h-10 bg-background/10 rounded-full flex items-center justify-center hover:bg-primary transition-colors">
+              <a href="https://facebook.com/fundimart" target="_blank" rel="noopener noreferrer" className="w-10 h-10 bg-background/10 rounded-full flex items-center justify-center hover:bg-primary transition-colors">
                 <Facebook className="w-5 h-5" />
               </a>
-              <a href="#" className="w-10 h-10 bg-background/10 rounded-full flex items-center justify-center hover:bg-primary transition-colors">
+              <a href="https://twitter.com/fundimart" target="_blank" rel="noopener noreferrer" className="w-10 h-10 bg-background/10 rounded-full flex items-center justify-center hover:bg-primary transition-colors">
                 <Twitter className="w-5 h-5" />
               </a>
-              <a href="#" className="w-10 h-10 bg-background/10 rounded-full flex items-center justify-center hover:bg-primary transition-colors">
+              <a href="https://instagram.com/fundimart" target="_blank" rel="noopener noreferrer" className="w-10 h-10 bg-background/10 rounded-full flex items-center justify-center hover:bg-primary transition-colors">
                 <Instagram className="w-5 h-5" />
               </a>
-              <a href="#" className="w-10 h-10 bg-background/10 rounded-full flex items-center justify-center hover:bg-primary transition-colors">
+              <a href="https://youtube.com/@fundimart" target="_blank" rel="noopener noreferrer" className="w-10 h-10 bg-background/10 rounded-full flex items-center justify-center hover:bg-primary transition-colors">
                 <Youtube className="w-5 h-5" />
               </a>
             </div>
@@ -64,11 +65,11 @@ const Footer = () => {
           <div>
             <h4 className="font-semibold text-lg mb-6">Quick Links</h4>
             <ul className="space-y-3">
-              <li><a href="#" className="text-background/70 hover:text-primary transition-colors">About Us</a></li>
-              <li><a href="#" className="text-background/70 hover:text-primary transition-colors">Shop All Products</a></li>
-              <li><a href="#" className="text-background/70 hover:text-primary transition-colors">Special Offers</a></li>
-              <li><a href="#" className="text-background/70 hover:text-primary transition-colors">Blog & Resources</a></li>
-              <li><a href="#" className="text-background/70 hover:text-primary transition-colors">Careers</a></li>
+              <li><Link to="/about" className="text-background/70 hover:text-primary transition-colors">About Us</Link></li>
+              <li><Link to="/category/building-materials" className="text-background/70 hover:text-primary transition-colors">Shop All Products</Link></li>
+              <li><Link to="/blog" className="text-background/70 hover:text-primary transition-colors">Blog & Resources</Link></li>
+              <li><Link to="/careers" className="text-background/70 hover:text-primary transition-colors">Careers</Link></li>
+              <li><Link to="/contact" className="text-background/70 hover:text-primary transition-colors">Contact</Link></li>
             </ul>
           </div>
 
@@ -76,11 +77,11 @@ const Footer = () => {
           <div>
             <h4 className="font-semibold text-lg mb-6">Customer Service</h4>
             <ul className="space-y-3">
-              <li><a href="#" className="text-background/70 hover:text-primary transition-colors">Help Center</a></li>
-              <li><a href="#" className="text-background/70 hover:text-primary transition-colors">Track Your Order</a></li>
-              <li><a href="#" className="text-background/70 hover:text-primary transition-colors">Shipping & Delivery</a></li>
-              <li><a href="#" className="text-background/70 hover:text-primary transition-colors">Returns & Refunds</a></li>
-              <li><a href="#" className="text-background/70 hover:text-primary transition-colors">Contact Us</a></li>
+              <li><Link to="/help" className="text-background/70 hover:text-primary transition-colors">Help Center</Link></li>
+              <li><Link to="/track-order" className="text-background/70 hover:text-primary transition-colors">Track Your Order</Link></li>
+              <li><Link to="/shipping" className="text-background/70 hover:text-primary transition-colors">Shipping & Delivery</Link></li>
+              <li><Link to="/returns" className="text-background/70 hover:text-primary transition-colors">Returns & Refunds</Link></li>
+              <li><Link to="/contact" className="text-background/70 hover:text-primary transition-colors">Contact Us</Link></li>
             </ul>
           </div>
 
@@ -111,9 +112,10 @@ const Footer = () => {
           <div className="flex flex-col md:flex-row items-center justify-between gap-4 text-sm text-background/60">
             <p>© 2026 FundiMart. All rights reserved.</p>
             <div className="flex gap-6">
-              <a href="#" className="hover:text-primary transition-colors">Privacy Policy</a>
-              <a href="#" className="hover:text-primary transition-colors">Terms of Service</a>
-              <a href="#" className="hover:text-primary transition-colors">Cookie Policy</a>
+              <Link to="/privacy" className="hover:text-primary transition-colors">Privacy Policy</Link>
+              <Link to="/terms" className="hover:text-primary transition-colors">Terms of Service</Link>
+              <Link to="/cookies" className="hover:text-primary transition-colors">Cookie Policy</Link>
+              <Link to="/admin/login" className="hover:text-primary transition-colors text-background/40 hover:text-primary text-xs">Admin</Link>
             </div>
           </div>
         </div>

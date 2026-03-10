@@ -181,7 +181,7 @@ const Auth = () => {
                       <input type="checkbox" className="rounded border-border" />
                       Remember me
                     </label>
-                    <a href="#" className="text-sm text-primary hover:underline">
+                    <a href="/forgot-password" className="text-sm text-primary hover:underline">
                       Forgot password?
                     </a>
                   </div>
@@ -331,9 +331,9 @@ const Auth = () => {
                       <input type="checkbox" className="rounded border-border mt-1" required />
                       <span className="text-sm text-muted-foreground">
                         I agree to the{" "}
-                        <a href="#" className="text-primary hover:underline">Terms of Service</a>
+                        <Link to="/terms" className="text-primary hover:underline">Terms of Service</Link>
                         {" "}and{" "}
-                        <a href="#" className="text-primary hover:underline">Privacy Policy</a>
+                        <Link to="/privacy" className="text-primary hover:underline">Privacy Policy</Link>
                       </span>
                     </div>
 
@@ -496,9 +496,9 @@ const Auth = () => {
                       <input type="checkbox" className="rounded border-border mt-1" required />
                       <span className="text-sm text-muted-foreground">
                         I agree to the{" "}
-                        <a href="#" className="text-primary hover:underline">Terms of Service</a>
+                        <Link to="/terms" className="text-primary hover:underline">Terms of Service</Link>
                         {" "}and{" "}
-                        <a href="#" className="text-primary hover:underline">Privacy Policy</a>
+                        <Link to="/privacy" className="text-primary hover:underline">Privacy Policy</Link>
                       </span>
                     </div>
 

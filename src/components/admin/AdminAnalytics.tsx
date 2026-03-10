@@ -68,7 +68,7 @@ const STAT_CARDS: StatCard[] = [
   {
     icon: <DollarSign className="w-6 h-6" />,
     label: 'Total Revenue',
-    value: '$42,580',
+    value: 'KES 4,258,000',
     change: '+12.5% from last month',
     trend: 'up',
     color: 'from-blue-600 to-blue-800',
@@ -92,7 +92,7 @@ const STAT_CARDS: StatCard[] = [
   {
     icon: <TrendingUp className="w-6 h-6" />,
     label: 'Average Order Value',
-    value: '$31.40',
+    value: 'KES 3,140',
     change: '+2.1% from last month',
     trend: 'up',
     color: 'from-amber-600 to-amber-800',
@@ -144,24 +144,24 @@ export default function AdminAnalytics() {
                 <XAxis dataKey="month" stroke="#94a3b8" />
                 <YAxis stroke="#94a3b8" />
                 <Tooltip
-                  contentStyle={{
-                    backgroundColor: '#1e293b',
-                    border: '1px solid #475569',
-                    borderRadius: '4px',
-                  }}
-                  labelStyle={{ color: '#e2e8f0' }}
-                  formatter={(value) => `$${value}`}
-                />
-                <Legend />
-                <Area
-                  type="monotone"
-                  dataKey="revenue"
-                  stroke="#3b82f6"
-                  fillOpacity={1}
-                  fill="url(#colorRevenue)"
-                  name="Monthly Revenue"
-                />
-              </AreaChart>
+                   contentStyle={{
+                     backgroundColor: '#1e293b',
+                     border: '1px solid #475569',
+                     borderRadius: '4px',
+                   }}
+                   labelStyle={{ color: '#e2e8f0' }}
+                   formatter={(value) => `KES ${value}`}
+                 />
+                 <Legend />
+                 <Area
+                   type="monotone"
+                   dataKey="revenue"
+                   stroke="#3b82f6"
+                   fillOpacity={1}
+                   fill="url(#colorRevenue)"
+                   name="Monthly Revenue"
+                 />
+               </AreaChart>
             </ResponsiveContainer>
           </CardContent>
         </Card>
@@ -212,15 +212,15 @@ export default function AdminAnalytics() {
                 <XAxis type="number" stroke="#94a3b8" />
                 <YAxis dataKey="category" type="category" width={120} stroke="#94a3b8" tick={{ fontSize: 12 }} />
                 <Tooltip
-                  contentStyle={{
-                    backgroundColor: '#1e293b',
-                    border: '1px solid #475569',
-                    borderRadius: '4px',
-                  }}
-                  labelStyle={{ color: '#e2e8f0' }}
-                  formatter={(value) => `$${value}`}
-                />
-                <Bar dataKey="sales" fill="#f59e0b" radius={[0, 8, 8, 0]} />
+                   contentStyle={{
+                     backgroundColor: '#1e293b',
+                     border: '1px solid #475569',
+                     borderRadius: '4px',
+                   }}
+                   labelStyle={{ color: '#e2e8f0' }}
+                   formatter={(value) => `KES ${value}`}
+                 />
+                 <Bar dataKey="sales" fill="#f59e0b" radius={[0, 8, 8, 0]} />
               </BarChart>
             </ResponsiveContainer>
           </CardContent>
@@ -267,28 +267,28 @@ export default function AdminAnalytics() {
             <ResponsiveContainer width="100%" height={300}>
               <PieChart>
                 <Pie
-                  data={CATEGORY_DATA}
-                  cx="50%"
-                  cy="50%"
-                  labelLine={false}
-                  label={({ category, value }) => `${category}: $${value}`}
-                  outerRadius={80}
-                  fill="#8884d8"
-                  dataKey="value"
-                >
-                  {CATEGORY_DATA.map((entry, index) => (
-                    <Cell key={`cell-${index}`} fill={COLORS[index % COLORS.length]} />
-                  ))}
-                </Pie>
-                <Tooltip
-                  contentStyle={{
-                    backgroundColor: '#1e293b',
-                    border: '1px solid #475569',
-                    borderRadius: '4px',
-                  }}
-                  labelStyle={{ color: '#e2e8f0' }}
-                  formatter={(value) => `$${value}`}
-                />
+                   data={CATEGORY_DATA}
+                   cx="50%"
+                   cy="50%"
+                   labelLine={false}
+                   label={({ category, value }) => `${category}: KES ${value}`}
+                   outerRadius={80}
+                   fill="#8884d8"
+                   dataKey="value"
+                 >
+                   {CATEGORY_DATA.map((entry, index) => (
+                     <Cell key={`cell-${index}`} fill={COLORS[index % COLORS.length]} />
+                   ))}
+                 </Pie>
+                 <Tooltip
+                   contentStyle={{
+                     backgroundColor: '#1e293b',
+                     border: '1px solid #475569',
+                     borderRadius: '4px',
+                   }}
+                   labelStyle={{ color: '#e2e8f0' }}
+                   formatter={(value) => `KES ${value}`}
+                 />
               </PieChart>
             </ResponsiveContainer>
           </CardContent>
@@ -333,7 +333,7 @@ export default function AdminAnalytics() {
                   stroke="#ef4444"
                   strokeWidth={2}
                   dot={{ fill: '#ef4444', r: 4 }}
-                  name="Revenue ($)"
+                   name="Revenue (KES)"
                 />
               </LineChart>
             </ResponsiveContainer>
