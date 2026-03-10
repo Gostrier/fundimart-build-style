@@ -36,11 +36,14 @@ export default function AdminLogin({ onLoginSuccess }: AdminLoginProps) {
     // Store admin session in localStorage
     localStorage.setItem('admin_authenticated', 'true');
     
+    // Call the success callback if it exists
+    if (onLoginSuccess) {
+      onLoginSuccess();
     }
 
     // Navigate to admin dashboard
     navigate('/admin/dashboard');
-  };
+  }; // Fixed: All logic is now correctly inside the handleSubmit function
 
   return (
     <div className="min-h-screen bg-gradient-to-b from-amber-950 to-amber-800 flex items-center justify-center p-4">
