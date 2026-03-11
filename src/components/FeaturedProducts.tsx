@@ -17,6 +17,7 @@ const FeaturedProducts = () => {
       const sellerProducts = JSON.parse(localStorage.getItem("fundimart_products") || "[]");
       // Convert seller products to ProductCard format
       const formattedSellerProducts = sellerProducts.map((p: Product) => ({
+        id: p.id || p.name.toLowerCase().replace(/\s+/g, '-'),
         image: p.photos[0] || "https://via.placeholder.com/300x300?text=" + encodeURIComponent(p.name),
         name: p.name,
         price: p.price,

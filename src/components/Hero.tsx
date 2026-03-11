@@ -1,5 +1,6 @@
 import { Button } from "@/components/ui/button";
 import { ArrowRight, Truck, Shield, Clock } from "lucide-react";
+import { Link } from "react-router-dom";
 
 const Hero = () => {
   return (
@@ -11,17 +12,19 @@ const Hero = () => {
               🏗️ New Season Sale - Up to 30% Off
             </span>
             <h1 className="text-3xl sm:text-4xl md:text-5xl lg:text-6xl font-bold text-foreground mb-4 md:mb-6 leading-tight">
-              Built With Trust,
+              Built On Trust,
               <span className="text-primary block">Delivered With Excellence</span>
             </h1>
             <p className="text-base md:text-lg text-muted-foreground mb-6 md:mb-8 max-w-lg mx-auto md:mx-0">
               Your one-stop shop for premium construction materials, professional tools, and expert advice. From foundation to finish.
             </p>
             <div className="flex flex-col sm:flex-row gap-3 md:gap-4 justify-center md:justify-start">
-              <Button variant="hero" size="lg" className="group w-full sm:w-auto">
-                Shop Now
-                <ArrowRight className="w-5 h-5 ml-2 group-hover:translate-x-1 transition-transform" />
-              </Button>
+              <Link to="/products">
+                <Button variant="hero" size="lg" className="group w-full sm:w-auto">
+                  Shop Now
+                  <ArrowRight className="w-5 h-5 ml-2 group-hover:translate-x-1 transition-transform" />
+                </Button>
+              </Link>
               <Button variant="outline" size="lg" className="w-full sm:w-auto">
                 View Catalog
               </Button>

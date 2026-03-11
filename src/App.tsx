@@ -8,7 +8,11 @@ import { CartProvider } from "@/contexts/CartContext";
 import { AuthProvider } from "@/contexts/AuthContext";
 import { useEffect } from "react";
 import Index from "./pages/Index";
+import Products from "./pages/Products";
+import ProductDetail from "./pages/ProductDetail";
+import SearchResults from "./pages/SearchResults";
 import NotFound from "./pages/NotFound";
+import SiteLogoBadge from "@/components/SiteLogoBadge"; // Import the new component
 import BoardPresentation from "./pages/BoardPresentation";
 import Auth from "./pages/Auth";
 import Category from "./pages/Category";
@@ -54,6 +58,9 @@ const AppContent = () => {
             <BrowserRouter>
               <Routes>
                 <Route path="/" element={<Index />} />
+                <Route path="/products" element={<Products />} />
+                <Route path="/product/:id" element={<ProductDetail />} />
+                <Route path="/search" element={<SearchResults />} />
                 <Route path="/auth" element={<Auth />} />
                 <Route path="/category/:slug" element={<Category />} />
                 <Route path="/board-presentation" element={<BoardPresentation />} />

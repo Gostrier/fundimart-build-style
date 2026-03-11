@@ -103,11 +103,16 @@ export default function AddProductModal({ onClose, onSubmit }: AddProductModalPr
                 <SelectValue placeholder="Select category" />
               </SelectTrigger>
               <SelectContent className="bg-slate-700 border-slate-600">
-                <SelectItem value="Electronics">Electronics</SelectItem>
-                <SelectItem value="Accessories">Accessories</SelectItem>
-                <SelectItem value="Clothing">Clothing</SelectItem>
-                <SelectItem value="Books">Books</SelectItem>
-                <SelectItem value="Other">Other</SelectItem>
+                <SelectItem value="cement-concrete">Cement & Concrete</SelectItem>
+                <SelectItem value="steel-reinforcement">Steel & Reinforcement</SelectItem>
+                <SelectItem value="timber-wood">Timber & Wood</SelectItem>
+                <SelectItem value="aggregates">Aggregates</SelectItem>
+                <SelectItem value="power-tools">Power Tools</SelectItem>
+                <SelectItem value="hand-tools">Hand Tools</SelectItem>
+                <SelectItem value="plumbing">Plumbing</SelectItem>
+                <SelectItem value="electrical">Electrical</SelectItem>
+                <SelectItem value="safety-gear">Safety Gear</SelectItem>
+                <SelectItem value="other">Other</SelectItem>
               </SelectContent>
             </Select>
           </div>

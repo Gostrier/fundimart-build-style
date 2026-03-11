@@ -2,7 +2,10 @@ import { Hammer, Wrench, Zap, Droplets, HardHat, Ruler } from "lucide-react";
 import { Link } from "react-router-dom";
 
 const categoryItems = [
-  { icon: Hammer, name: "Building Materials", count: "2,450+ items", color: "bg-orange-100 text-orange-600", slug: "building-materials" },
+  { icon: Droplets, name: "Cement & Concrete", count: "450+ items", color: "bg-orange-100 text-orange-600", slug: "cement-concrete" },
+  { icon: Ruler, name: "Steel & Reinforcement", count: "320+ items", color: "bg-slate-100 text-slate-600", slug: "steel-reinforcement" },
+  { icon: Hammer, name: "Timber & Wood", count: "600+ items", color: "bg-amber-100 text-amber-600", slug: "timber-wood" },
+  { icon: Droplets, name: "Aggregates", count: "250+ items", color: "bg-gray-100 text-gray-600", slug: "aggregates" },
   { icon: Wrench, name: "Power Tools", count: "890+ items", color: "bg-blue-100 text-blue-600", slug: "power-tools" },
   { icon: Ruler, name: "Hand Tools", count: "1,200+ items", color: "bg-green-100 text-green-600", slug: "hand-tools" },
   { icon: Droplets, name: "Plumbing", count: "650+ items", color: "bg-cyan-100 text-cyan-600", slug: "plumbing" },
@@ -23,7 +26,7 @@ const Categories = () => {
           </p>
         </div>
 
-        <div className="grid grid-cols-3 sm:grid-cols-3 md:grid-cols-6 gap-3 md:gap-4">
+        <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 gap-3 md:gap-4">
           {categoryItems.map((category, index) => (
             <Link
               key={index}

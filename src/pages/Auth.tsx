@@ -505,6 +505,12 @@ const Auth = () => {
                     <Button type="submit" className="w-full" disabled={isLoading}>
                       {isLoading ? "Creating seller account..." : "Create Seller Account"}
                     </Button>
+                    <div className="mt-4 text-center text-sm">
+                      Already a seller?{" "}
+                      <Link to="/auth" className="text-primary hover:underline">
+                        Sign In
+                      </Link>
+                    </div>
                   </form>
                 )}
               </TabsContent>

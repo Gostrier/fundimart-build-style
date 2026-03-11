@@ -1,4 +1,5 @@
 export interface Product {
+  id: string;
   image: string;
   name: string;
   price: number;
@@ -7,20 +8,24 @@ export interface Product {
   reviews: number;
   badge?: string;
   category: string;
+  description: string;
 }
 
 export const products: Product[] = [
-  // Building Materials
+  // Building Materials - Cement
   {
+    id: "bamburi-nguvu-cement-50kg",
     image: "https://images.unsplash.com/photo-1585771724684-38269d6639fd?w=400&h=400&fit=crop",
     name: "Bamburi Nguvu Cement 50kg",
     price: 885,
     rating: 4.8,
     reviews: 324,
     badge: "Best Seller",
-    category: "building-materials",
+    category: "cement-concrete",
+    description: "Bamburi Nguvu Cement is a multipurpose Portland Pozzolana Cement. It is specially formulated for all general-purpose applications including concrete, mortar, plaster, and screed.",
   },
   {
+    id: "simba-cement-32-5r-50kg",
     image: "https://images.unsplash.com/photo-1590074072786-a66914d668f1?w=400&h=400&fit=crop",
     name: "Simba Cement 32.5R 50kg",
     price: 950,
@@ -28,9 +33,12 @@ export const products: Product[] = [
     rating: 4.7,
     reviews: 189,
     badge: "Popular",
-    category: "building-materials",
+    category: "cement-concrete",
+    description: "Simba Cement 32.5R is a high-quality cement suitable for all construction projects. It offers excellent workability and strength for your building needs.",
   },
+  // Building Materials - Steel
   {
+    id: "deformed-steel-bar-d12-12m",
     image: "https://images.unsplash.com/photo-1530982011887-3cc11cc85693?w=400&h=400&fit=crop",
     name: "Deformed Steel Bar D12 (12m)",
     price: 1150,
@@ -38,44 +46,56 @@ export const products: Product[] = [
     rating: 4.9,
     reviews: 142,
     badge: "Hot Deal",
-    category: "building-materials",
+    category: "steel-reinforcement",
+    description: "High-quality deformed steel bars (D12) for reinforced concrete structures. These bars provide superior grip and strength for structural integrity.",
   },
   {
+    id: "high-tensile-steel-16mm",
     image: "https://images.unsplash.com/photo-1567789884554-0b844b597180?w=400&h=400&fit=crop",
     name: "High Tensile Steel 16mm (per kg)",
     price: 145,
     rating: 4.6,
     reviews: 98,
-    category: "building-materials",
+    category: "steel-reinforcement",
+    description: "16mm High Tensile Steel bars sold per kilogram. Perfect for heavy-duty reinforcement in large-scale construction projects.",
   },
+  // Building Materials - Timber
   {
+    id: "cypress-timber-4x2",
     image: "https://images.unsplash.com/photo-1520333789090-1afc82db536a?w=400&h=400&fit=crop",
     name: "Cypress Timber 4×2 (per ft)",
     price: 55,
     rating: 4.5,
     reviews: 234,
-    category: "building-materials",
+    category: "timber-wood",
+    description: "Premium Cypress Timber 4x2, seasoned and ready for use in roofing, framing, and general joinery.",
   },
   {
+    id: "pine-timber-4x2",
     image: "https://images.unsplash.com/photo-1558618666-fcd25c85cd64?w=400&h=400&fit=crop",
     name: "Pine Timber 4×2 (per ft)",
     price: 38,
     rating: 4.4,
     reviews: 178,
     badge: "Budget Pick",
-    category: "building-materials",
+    category: "timber-wood",
+    description: "Cost-effective Pine Timber 4x2. Ideal for temporary structures, scaffolding, and light framing work.",
   },
+  // Building Materials - Aggregates
   {
+    id: "ballast-coarse-aggregate",
     image: "https://images.unsplash.com/photo-1517089596392-fb9a9033e05b?w=400&h=400&fit=crop",
     name: "Ballast / Coarse Aggregate (per m³)",
     price: 4467,
     rating: 4.8,
     reviews: 156,
-    category: "building-materials",
+    category: "aggregates",
+    description: "Clean, well-graded coarse aggregate (ballast) for concrete production. Sold per cubic meter.",
   },
 
   // Power Tools
   {
+    id: "bosch-impact-drill-750w",
     image: "https://images.unsplash.com/photo-1572981779307-38b8cabb2407?w=400&h=400&fit=crop",
     name: "Bosch Impact Drill 750W",
     price: 8500,
@@ -84,16 +104,20 @@ export const products: Product[] = [
     reviews: 210,
     badge: "Best Seller",
     category: "power-tools",
+    description: "The Bosch Impact Drill GSB 16 RE is a powerful 750W drill designed for professional use in concrete, masonry, and wood.",
   },
   {
+    id: "makita-angle-grinder-115mm",
     image: "https://images.unsplash.com/photo-1504148455328-c376907d081c?w=400&h=400&fit=crop",
     name: "Makita Angle Grinder 115mm",
     price: 5200,
     rating: 4.7,
     reviews: 145,
     category: "power-tools",
+    description: "Ergonomic and powerful Makita 115mm angle grinder. Features a slim body for comfortable grip and enhanced control.",
   },
   {
+    id: "dewalt-circular-saw-185mm",
     image: "https://images.unsplash.com/photo-1513467535987-db81bc0d0222?w=400&h=400&fit=crop",
     name: "DeWalt Circular Saw 185mm",
     price: 12500,
@@ -102,26 +126,32 @@ export const products: Product[] = [
     reviews: 98,
     badge: "Hot Deal",
     category: "power-tools",
+    description: "High-performance DeWalt 185mm circular saw. Delivers precise cuts with its powerful motor and durable construction.",
   },
 
   // Hand Tools
   {
+    id: "stanley-claw-hammer-20oz",
     image: "https://images.unsplash.com/photo-1586864387789-628af9feed72?w=400&h=400&fit=crop",
     name: "Stanley Claw Hammer 20oz",
     price: 1800,
     rating: 4.6,
     reviews: 312,
     category: "hand-tools",
+    description: "Professional Stanley 20oz Claw Hammer with fiberglass handle for reduced vibration and increased durability.",
   },
   {
+    id: "spirit-level-600mm",
     image: "https://images.unsplash.com/photo-1581147036324-c47a03a81d48?w=400&h=400&fit=crop",
     name: "Spirit Level 600mm",
     price: 950,
     rating: 4.5,
     reviews: 178,
     category: "hand-tools",
+    description: "Accurate 600mm Spirit Level with three vials for horizontal, vertical, and 45-degree measurements.",
   },
   {
+    id: "measuring-tape-8m",
     image: "https://images.unsplash.com/photo-1530124566582-a45a7e3e29bf?w=400&h=400&fit=crop",
     name: "Measuring Tape 8m",
     price: 650,
@@ -129,10 +159,12 @@ export const products: Product[] = [
     reviews: 256,
     badge: "Popular",
     category: "hand-tools",
+    description: "Durable 8m measuring tape with rubberized grip and easy-to-read markings for precise measurements on site.",
   },
 
   // Plumbing
   {
+    id: "pvc-pipe-110mm-6m",
     image: "https://images.unsplash.com/photo-1504328345606-18bbc8c9d7d1?w=400&h=400&fit=crop",
     name: "PVC Pipe 110mm (6m)",
     price: 2730,
@@ -140,8 +172,10 @@ export const products: Product[] = [
     reviews: 87,
     badge: "New",
     category: "plumbing",
+    description: "Standard 110mm PVC drainage pipe, 6 meters in length. High-quality material for long-lasting plumbing installations.",
   },
   {
+    id: "water-tank-1000l",
     image: "https://images.unsplash.com/photo-1585704032915-c3400ca199e7?w=400&h=400&fit=crop",
     name: "Water Tank 1000L",
     price: 15000,
@@ -150,34 +184,42 @@ export const products: Product[] = [
     reviews: 134,
     badge: "Hot Deal",
     category: "plumbing",
+    description: "High-density polyethylene 1000L water storage tank. UV-stabilized and food-grade material for safe water storage.",
   },
   {
+    id: "ppr-pipe-25mm-4m",
     image: "https://images.unsplash.com/photo-1607472586893-edb57bdc0e39?w=400&h=400&fit=crop",
     name: "PPR Pipe 25mm (4m)",
     price: 450,
     rating: 4.5,
     reviews: 67,
     category: "plumbing",
+    description: "PPR 25mm pipe for hot and cold water distribution. Heat-fused joints ensure leak-proof performance.",
   },
 
   // Electrical
   {
+    id: "twin-earth-cable-2-5mm",
     image: "https://images.unsplash.com/photo-1558618666-fcd25c85cd64?w=400&h=400&fit=crop",
     name: "Twin & Earth Cable 2.5mm (100m)",
     price: 8900,
     rating: 4.6,
     reviews: 189,
     category: "electrical",
+    description: "High-quality 2.5mm Twin & Earth electrical cable for domestic and industrial wiring. 100m roll.",
   },
   {
+    id: "mcb-circuit-breaker-20a",
     image: "https://images.unsplash.com/photo-1621905252507-b35492cc74b4?w=400&h=400&fit=crop",
     name: "MCB Circuit Breaker 20A",
     price: 650,
     rating: 4.7,
     reviews: 112,
     category: "electrical",
+    description: "20A Miniature Circuit Breaker (MCB) for circuit protection against overload and short circuits.",
   },
   {
+    id: "double-socket-outlet",
     image: "https://images.unsplash.com/photo-1558618666-fcd25c85cd64?w=400&h=400&fit=crop",
     name: "Double Socket Outlet",
     price: 350,
@@ -185,10 +227,12 @@ export const products: Product[] = [
     reviews: 234,
     badge: "Popular",
     category: "electrical",
+    description: "Standard 13A double socket outlet with a clean, modern design for any interior.",
   },
 
   // Safety Gear
   {
+    id: "safety-helmet-hard-hat",
     image: "https://images.unsplash.com/photo-1504307651254-35680f356dfd?w=400&h=400&fit=crop",
     name: "Safety Helmet (Hard Hat)",
     price: 850,
@@ -196,16 +240,20 @@ export const products: Product[] = [
     reviews: 298,
     badge: "Best Seller",
     category: "safety-gear",
+    description: "Industrial-grade safety helmet for head protection on construction sites. Comfortable and adjustable fit.",
   },
   {
+    id: "high-vis-reflective-vest",
     image: "https://images.unsplash.com/photo-1618517048289-f5a30fbbdd6e?w=400&h=400&fit=crop",
     name: "High-Vis Reflective Vest",
     price: 450,
     rating: 4.5,
     reviews: 178,
     category: "safety-gear",
+    description: "High-visibility reflective vest with multi-pockets. Essential for safety on site and in low-light conditions.",
   },
   {
+    id: "safety-boots-steel-toe",
     image: "https://images.unsplash.com/photo-1590073242678-70ee3fc28e8e?w=400&h=400&fit=crop",
     name: "Safety Boots (Steel Toe)",
     price: 3500,
@@ -214,11 +262,15 @@ export const products: Product[] = [
     reviews: 156,
     badge: "Hot Deal",
     category: "safety-gear",
+    description: "Heavy-duty steel toe safety boots. Provides maximum protection and comfort for long working hours.",
   },
 ];
 
 export const categories = [
-  { slug: "building-materials", name: "Building Materials", count: "2,450+ items" },
+  { slug: "cement-concrete", name: "Cement & Concrete", count: "450+ items" },
+  { slug: "steel-reinforcement", name: "Steel & Reinforcement", count: "320+ items" },
+  { slug: "timber-wood", name: "Timber & Wood", count: "600+ items" },
+  { slug: "aggregates", name: "Aggregates", count: "250+ items" },
   { slug: "power-tools", name: "Power Tools", count: "890+ items" },
   { slug: "hand-tools", name: "Hand Tools", count: "1,200+ items" },
   { slug: "plumbing", name: "Plumbing", count: "650+ items" },
