@@ -42,7 +42,7 @@ const Header = () => {
           <span className="text-muted-foreground">Enjoy your shopping experience with FundiMart</span>
           <div className="flex items-center gap-4">
             <Link to="/seller/login" className="text-primary font-semibold hover:underline flex items-center gap-1">
-              Seller Portal
+              Hardware Seller Portal
             </Link>
             <div className="w-px h-4 bg-border" />
             <Link to="/help" className="text-muted-foreground hover:text-primary transition-colors">Help Center</Link>
@@ -145,7 +145,7 @@ const Header = () => {
             <nav className="flex flex-col gap-3 max-h-[60vh] overflow-y-auto">
               <Link to="/seller/login" className="font-bold text-primary py-2 border-b border-border flex items-center gap-2" onClick={() => setIsMenuOpen(false)}>
                 <User className="w-4 h-4" />
-                Seller Portal
+                Hardware Seller Portal
               </Link>
               {user && (
                 <Link to="/logout" className="font-bold text-primary py-2 border-b border-border flex items-center gap-2" onClick={() => setIsMenuOpen(false)}>
