@@ -41,6 +41,10 @@ const Header = () => {
         <div className="hidden md:flex items-center justify-between py-2 text-sm border-b border-border">
           <span className="text-muted-foreground">Enjoy your shopping experience with FundiMart</span>
           <div className="flex items-center gap-4">
+            <Link to="/seller/login" className="text-primary font-semibold hover:underline flex items-center gap-1">
+              Seller Portal
+            </Link>
+            <div className="w-px h-4 bg-border" />
             <Link to="/help" className="text-muted-foreground hover:text-primary transition-colors">Help Center</Link>
             <Link to="/track-order" className="text-muted-foreground hover:text-primary transition-colors">Track Order</Link>
             {user && (
@@ -139,6 +143,10 @@ const Header = () => {
               </Button>
             </form>
             <nav className="flex flex-col gap-3 max-h-[60vh] overflow-y-auto">
+              <Link to="/seller/login" className="font-bold text-primary py-2 border-b border-border flex items-center gap-2" onClick={() => setIsMenuOpen(false)}>
+                <User className="w-4 h-4" />
+                Seller Portal
+              </Link>
               {user && (
                 <Link to="/logout" className="font-bold text-primary py-2 border-b border-border flex items-center gap-2" onClick={() => setIsMenuOpen(false)}>
                   <LogOut className="w-4 h-4" />

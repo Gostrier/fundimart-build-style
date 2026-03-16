@@ -22,6 +22,17 @@ const SellerLogin = () => {
 
     try {
       await login(email, password);
+      
+      // Check if user is actually a seller after login
+      // Since login sets the user in context, we check the localStorage/context
+      const storedUser = JSON.parse(localStorage.getItem("fundimart_user") || "{}");
+      
+      if (storedUser.role !== "seller") {
+        // Log them out if they are not a seller but trying to login here
+        localStorage.removeItem("fundimart_user");
+        throw new Error("This login is for Hardware Sellers only. Please use the Buyer login.");
+      }
+
       toast.success("Welcome back! Accessing seller dashboard...");
       navigate("/seller/dashboard");
     } catch (error: any) {
@@ -37,11 +48,11 @@ const SellerLogin = () => {
       <main className="flex-grow flex items-center justify-center px-4 py-12 md:py-20 bg-muted/30">
         <div className="w-full max-w-[450px]">
           <Link
-            to="/"
+            to="/auth"
             className="inline-flex items-center text-sm text-muted-foreground hover:text-primary mb-8 transition-colors"
           >
             <ArrowLeft className="w-4 h-4 mr-2" />
-            Back to Home
+            Back to General Login
           </Link>
 
           <div className="bg-card border border-border rounded-2xl shadow-xl overflow-hidden">
@@ -58,14 +69,14 @@ const SellerLogin = () => {
             <div className="p-8">
               <form onSubmit={handleSubmit} className="space-y-6">
                 <div className="space-y-2">
-                  <Label htmlFor="email">Work Email</Label>
+                  <Label htmlFor="email">Business Email</Label>
                   <div className="relative">
                     <Mail className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-muted-foreground" />
                     <Input
                       id="email"
                       type="email"
                       placeholder="name@hardware.com"
-                      className="pl-10"
+                      className="pl-10 h-11"
                       value={email}
                       onChange={(e) => setEmail(e.target.value)}
                       required
@@ -89,7 +100,7 @@ const SellerLogin = () => {
                       id="password"
                       type="password"
                       placeholder="••••••••"
-                      className="pl-10"
+                      className="pl-10 h-11"
                       value={password}
                       onChange={(e) => setPassword(e.target.value)}
                       required
@@ -97,30 +108,30 @@ const SellerLogin = () => {
                   </div>
                 </div>
 
-                <Button type="submit" className="w-full h-11" disabled={isLoading}>
-                  {isLoading ? "Signing in..." : "Sign In to Dashboard"}
+                <Button type="submit" className="w-full h-11 text-base font-semibold" disabled={isLoading}>
+                  {isLoading ? "Authenticating..." : "Login to Seller Dashboard"}
                 </Button>
               </form>
 
               <div className="mt-8 pt-6 border-t border-border text-center">
                 <p className="text-sm text-muted-foreground">
-                  Don't have a seller account?{" "}
-                  <Link to="/auth?tab=signup&role=seller" className="text-primary font-semibold hover:underline">
-                    Register your Hardware
+                  Need a seller account?{" "}
+                  <Link to="/auth?tab=signup&role=seller" className="text-primary font-bold hover:underline">
+                    Register your Business
                   </Link>
                 </p>
               </div>
             </div>
           </div>
 
-          <div className="mt-8 p-4 bg-primary/5 border border-primary/10 rounded-xl flex items-start gap-3">
-            <div className="w-8 h-8 rounded-full bg-primary/10 flex items-center justify-center flex-shrink-0 text-primary">
-              <Building2 className="w-4 h-4" />
+          <div className="mt-8 p-4 bg-amber-50 dark:bg-amber-900/20 border border-amber-200 dark:border-amber-800 rounded-xl flex items-start gap-3">
+            <div className="w-8 h-8 rounded-full bg-amber-100 dark:bg-amber-900/40 flex items-center justify-center flex-shrink-0 text-amber-600 dark:text-amber-400">
+              <ShieldCheck className="w-4 h-4" />
             </div>
             <div>
-              <p className="text-xs font-bold text-primary mb-1">Hardware Partner</p>
-              <p className="text-[11px] text-muted-foreground leading-relaxed">
-                By logging in, you agree to FundiMart's Seller Terms of Service and Privacy Policy.
+              <p className="text-xs font-bold text-amber-800 dark:text-amber-300 mb-1">Secure Seller Access</p>
+              <p className="text-[11px] text-amber-700 dark:text-amber-400 leading-relaxed">
+                This portal is strictly for verified hardware partners. If you are a buyer, please use the standard login page.
               </p>
             </div>
           </div>
