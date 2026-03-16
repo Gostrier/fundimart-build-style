@@ -15,6 +15,7 @@ interface ProductCardProps {
   rating: number;
   reviews: number;
   badge?: string;
+  sellerId?: string;
 }
 
 const ProductCard = ({
@@ -26,6 +27,7 @@ const ProductCard = ({
   rating,
   reviews,
   badge,
+  sellerId = "static-seller",
 }: ProductCardProps) => {
   const { addToCart } = useCart();
   const { isAuthenticated } = useAuth(); // Get isAuthenticated status
@@ -35,12 +37,7 @@ const ProductCard = ({
   const handleAddToCart = (e: React.MouseEvent) => {
     e.preventDefault();
     e.stopPropagation();
-    if (!isAuthenticated) {
-      toast.error("Please log in to add items to your cart.");
-      navigate("/auth"); // Redirect to authentication page
-      return;
-    }
-    addToCart({ image, name, price });
+    addToCart({ id, sellerId, image, name, price });
     toast.success(`${name} added to cart`);
   };
 

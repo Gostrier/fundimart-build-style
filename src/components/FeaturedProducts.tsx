@@ -2,40 +2,53 @@ import { useState, useEffect } from "react";
 import ProductCard from "./ProductCard";
 import { Button } from "@/components/ui/button";
 import { ArrowRight } from "lucide-react";
-import { products } from "@/data/products";
+import { products as staticProducts } from "@/data/products";
 import { Product } from "@/types/product";
+import { useNavigate } from "react-router-dom";
 
 const FeaturedProducts = () => {
   const [allProducts, setAllProducts] = useState<any[]>([]);
+  const navigate = useNavigate();
 
   useEffect(() => {
-    // Get default products
-    let displayProducts = [...products];
+    // 1. Format static products
+    const formattedStatic = staticProducts.map(p => ({
+      id: p.id,
+      image: p.image,
+      name: p.name,
+      price: p.price,
+      rating: p.rating || 4.5,
+      reviews: p.reviews || 10,
+      badge: p.badge,
+      sellerId: "static-seller"
+    }));
 
-    // Load and merge seller products from localStorage
+    // 2. Load and merge seller/admin products from localStorage
+    let displayProducts = [...formattedStatic];
     try {
-      const sellerProducts = JSON.parse(localStorage.getItem("fundimart_products") || "[]");
-      // Convert seller products to ProductCard format
-      const formattedSellerProducts = sellerProducts.map((p: Product) => ({
-        id: p.id || p.name.toLowerCase().replace(/\s+/g, '-'),
+      const storedProducts = JSON.parse(localStorage.getItem("fundimart_products") || "[]");
+      const formattedStored = storedProducts.map((p: Product) => ({
+        id: p.id,
         image: p.photos[0] || "https://via.placeholder.com/300x300?text=" + encodeURIComponent(p.name),
         name: p.name,
         price: p.price,
         rating: 4.5,
         reviews: 12,
         badge: p.quality ? p.quality : undefined,
-        seller: p.sellerName,
+        sellerId: p.sellerId,
       }));
-      displayProducts = [...formattedSellerProducts, ...displayProducts];
+      
+      // Combine them, putting new products first
+      displayProducts = [...formattedStored, ...formattedStatic];
     } catch (error) {
-      console.error("Error loading seller products:", error);
+      console.error("Error loading stored products:", error);
     }
 
     setAllProducts(displayProducts);
   }, []);
 
-  // Show first 8 products as featured
-  const featured = allProducts.slice(0, 8);
+  // Show first 12 products as featured
+  const featured = allProducts.slice(0, 12);
 
   return (
     <section className="py-10 md:py-16">
@@ -49,17 +62,27 @@ const FeaturedProducts = () => {
               Discover our top-rated construction materials and tools from verified sellers
             </p>
           </div>
-          <Button variant="outline" className="group w-full sm:w-auto">
+          <Button 
+            variant="outline" 
+            className="group w-full sm:w-auto"
+            onClick={() => navigate("/products")}
+          >
             View All Products
             <ArrowRight className="w-4 h-4 ml-2 group-hover:translate-x-1 transition-transform" />
           </Button>
         </div>
 
-        <div className="grid grid-cols-2 lg:grid-cols-4 gap-3 md:gap-6">
-          {featured.map((product, index) => (
-            <ProductCard key={index} {...product} />
-          ))}
-        </div>
+        {featured.length === 0 ? (
+            <div className="text-center py-10 text-muted-foreground">
+                No products to display.
+            </div>
+        ) : (
+            <div className="grid grid-cols-2 lg:grid-cols-4 gap-3 md:gap-6">
+            {featured.map((product, index) => (
+                <ProductCard key={`${product.id}-${index}`} {...product} />
+            ))}
+            </div>
+        )}
       </div>
     </section>
   );

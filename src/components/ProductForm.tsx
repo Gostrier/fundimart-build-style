@@ -15,16 +15,14 @@ interface ProductFormProps {
 }
 
 const CATEGORIES = [
-  "Cement & Concrete",
+  "Cement",
+  "Steel",
+  "Timber",
+  "Sand and Ballast",
   "Roofing Materials",
-  "Bricks & Blocks",
-  "Steel & Metal",
-  "Wood & Timber",
-  "Paints & Coatings",
-  "Electrical",
-  "Plumbing",
-  "Tools & Equipment",
-  "Safety Equipment",
+  "Plumbing Materials",
+  "Electrical Materials",
+  "Tiles and Finishing Materials",
   "Other",
 ];
 

@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import {
@@ -9,50 +9,86 @@ import {
   TableHeader,
   TableRow,
 } from '@/components/ui/table';
-import AddProductModal from './modals/AddProductModal';
-import EditProductModal from './modals/EditProductModal';
+import { Dialog, DialogContent, DialogDescription, DialogHeader, DialogTitle } from "@/components/ui/dialog";
+import { ProductForm } from '@/components/ProductForm';
 import { Edit2, Trash2, Plus } from 'lucide-react';
-
-interface Product {
-  id: string;
-  name: string;
-  category: string;
-  price: number;
-  stock: number;
-  status: 'active' | 'inactive';
-}
-
-const SAMPLE_PRODUCTS: Product[] = [
-  { id: '1', name: 'Wireless Headphones', category: 'Electronics', price: 79.99, stock: 45, status: 'active' },
-  { id: '2', name: 'USB-C Cable', category: 'Accessories', price: 12.99, stock: 120, status: 'active' },
-  { id: '3', name: 'Phone Case', category: 'Accessories', price: 19.99, stock: 0, status: 'inactive' },
-];
+import { Product } from '@/types/product';
 
 export default function AdminProducts() {
-  const [products, setProducts] = useState<Product[]>(SAMPLE_PRODUCTS);
+  const [products, setProducts] = useState<Product[]>([]);
   const [showAddModal, setShowAddModal] = useState(false);
   const [editingProduct, setEditingProduct] = useState<Product | null>(null);
+  const [isLoading, setIsLoading] = useState(false);
 
-  const handleAddProduct = (product: Omit<Product, 'id'>) => {
-    const newProduct = { ...product, id: Date.now().toString() };
-    setProducts([...products, newProduct as Product]);
-    setShowAddModal(false);
+  useEffect(() => {
+    const allProducts = JSON.parse(localStorage.getItem("fundimart_products") || "[]");
+    setProducts(allProducts);
+  }, []);
+
+  const handleAddProduct = async (data: Omit<Product, 'id' | 'createdAt' | 'updatedAt'>) => {
+    setIsLoading(true);
+    try {
+      const newProduct: Product = {
+        ...data,
+        id: `admin_prod_${Date.now()}`,
+        sellerId: "admin",
+        sellerName: "Fundimart Admin",
+        createdAt: Date.now(),
+        updatedAt: Date.now(),
+        status: "active",
+      };
+
+      const allProducts = JSON.parse(localStorage.getItem("fundimart_products") || "[]");
+      allProducts.push(newProduct);
+      localStorage.setItem("fundimart_products", JSON.stringify(allProducts));
+
+      setProducts([...products, newProduct]);
+      setShowAddModal(false);
+      alert("Product added successfully!");
+    } finally {
+      setIsLoading(false);
+    }
   };
 
-  const handleEditProduct = (product: Product) => {
-    setProducts(products.map(p => p.id === product.id ? product : p));
-    setEditingProduct(null);
+  const handleEditProduct = async (data: Omit<Product, 'id' | 'createdAt' | 'updatedAt'>) => {
+    if (!editingProduct) return;
+    setIsLoading(true);
+    try {
+      const updatedProduct: Product = {
+        ...editingProduct,
+        ...data,
+        updatedAt: Date.now(),
+      };
+
+      const allProducts = JSON.parse(localStorage.getItem("fundimart_products") || "[]");
+      const index = allProducts.findIndex((p: Product) => p.id === editingProduct.id);
+      if (index !== -1) {
+        allProducts[index] = updatedProduct;
+        localStorage.setItem("fundimart_products", JSON.stringify(allProducts));
+      }
+
+      setProducts(products.map(p => p.id === editingProduct.id ? updatedProduct : p));
+      setEditingProduct(null);
+      alert("Product updated successfully!");
+    } finally {
+      setIsLoading(false);
+    }
   };
 
   const handleDeleteProduct = (id: string) => {
-    setProducts(products.filter(p => p.id !== id));
+    if (confirm("Are you sure you want to delete this product?")) {
+      const allProducts = JSON.parse(localStorage.getItem("fundimart_products") || "[]");
+      const filtered = allProducts.filter((p: Product) => p.id !== id);
+      localStorage.setItem("fundimart_products", JSON.stringify(filtered));
+      setProducts(filtered);
+    }
   };
 
   return (
     <Card className="bg-slate-800 border-slate-700">
       <CardHeader className="flex flex-row items-center justify-between">
         <div>
-          <CardTitle className="text-white">Products</CardTitle>
+          <CardTitle className="text-white">Products Management</CardTitle>
           <p className="text-sm text-slate-400 mt-1">{products.length} total products</p>
         </div>
         <Button onClick={() => setShowAddModal(true)} className="gap-2">
@@ -67,71 +103,86 @@ export default function AdminProducts() {
               <TableRow className="border-slate-700">
                 <TableHead className="text-slate-300">Name</TableHead>
                 <TableHead className="text-slate-300">Category</TableHead>
-                <TableHead className="text-slate-300">Price</TableHead>
+                <TableHead className="text-slate-300">Price (KES)</TableHead>
                 <TableHead className="text-slate-300">Stock</TableHead>
-                <TableHead className="text-slate-300">Status</TableHead>
+                <TableHead className="text-slate-300">Seller</TableHead>
                 <TableHead className="text-slate-300">Actions</TableHead>
               </TableRow>
             </TableHeader>
             <TableBody>
-              {products.map((product) => (
-                <TableRow key={product.id} className="border-slate-700">
-                  <TableCell className="text-white font-medium">{product.name}</TableCell>
-                  <TableCell className="text-slate-300">{product.category}</TableCell>
-                  <TableCell className="text-slate-300">${product.price.toFixed(2)}</TableCell>
-                  <TableCell className="text-slate-300">{product.stock} units</TableCell>
-                  <TableCell>
-                    <span
-                      className={`px-3 py-1 rounded-full text-xs font-medium ${
-                        product.status === 'active'
-                          ? 'bg-green-900 text-green-200'
-                          : 'bg-red-900 text-red-200'
-                      }`}
-                    >
-                      {product.status}
-                    </span>
-                  </TableCell>
-                  <TableCell className="space-x-2">
-                    <Button
-                      variant="outline"
-                      size="sm"
-                      onClick={() => setEditingProduct(product)}
-                      className="gap-2"
-                    >
-                      <Edit2 size={16} />
-                      Edit
-                    </Button>
-                    <Button
-                      variant="destructive"
-                      size="sm"
-                      onClick={() => handleDeleteProduct(product.id)}
-                      className="gap-2"
-                    >
-                      <Trash2 size={16} />
-                      Delete
-                    </Button>
+              {products.length === 0 ? (
+                <TableRow>
+                  <TableCell colSpan={6} className="text-center py-8 text-slate-400">
+                    No products found in the database.
                   </TableCell>
                 </TableRow>
-              ))}
+              ) : (
+                products.map((product) => (
+                  <TableRow key={product.id} className="border-slate-700">
+                    <TableCell className="text-white font-medium">{product.name}</TableCell>
+                    <TableCell className="text-slate-300">{product.category}</TableCell>
+                    <TableCell className="text-slate-300">KES {product.price.toLocaleString()}</TableCell>
+                    <TableCell className="text-slate-300">{product.stock} units</TableCell>
+                    <TableCell className="text-slate-300">
+                      <span className="text-xs px-2 py-1 bg-slate-700 rounded-full">
+                        {product.sellerName}
+                      </span>
+                    </TableCell>
+                    <TableCell className="space-x-2">
+                      <Button
+                        variant="outline"
+                        size="sm"
+                        onClick={() => setEditingProduct(product)}
+                        className="gap-2"
+                      >
+                        <Edit2 size={16} />
+                        Edit
+                      </Button>
+                      <Button
+                        variant="destructive"
+                        size="sm"
+                        onClick={() => handleDeleteProduct(product.id)}
+                        className="gap-2"
+                      >
+                        <Trash2 size={16} />
+                        Delete
+                      </Button>
+                    </TableCell>
+                  </TableRow>
+                ))
+              )}
             </TableBody>
           </Table>
         </div>
       </CardContent>
 
-      {showAddModal && (
-        <AddProductModal
-          onClose={() => setShowAddModal(false)}
-          onSubmit={handleAddProduct}
-        />
-      )}
+      {/* Add Product Dialog */}
+      <Dialog open={showAddModal} onOpenChange={setShowAddModal}>
+        <DialogContent className="max-w-2xl max-h-[90vh] overflow-y-auto bg-slate-900 border-slate-700 text-white">
+          <DialogHeader>
+            <DialogTitle>Add New Product (Admin)</DialogTitle>
+            <DialogDescription className="text-slate-400">
+              Fill in the details for the new product to be listed on the website.
+            </DialogDescription>
+          </DialogHeader>
+          <ProductForm onSubmit={handleAddProduct} isLoading={isLoading} />
+        </DialogContent>
+      </Dialog>
 
-      {editingProduct && (
-        <EditProductModal
-          product={editingProduct}
-          onClose={() => setEditingProduct(null)}
-          onSubmit={handleEditProduct}
-        />
-      )}
+      {/* Edit Product Dialog */}
+      <Dialog open={!!editingProduct} onOpenChange={() => setEditingProduct(null)}>
+        <DialogContent className="max-w-2xl max-h-[90vh] overflow-y-auto bg-slate-900 border-slate-700 text-white">
+          <DialogHeader>
+            <DialogTitle>Edit Product</DialogTitle>
+            <DialogDescription className="text-slate-400">
+              Update the details for this product.
+            </DialogDescription>
+          </DialogHeader>
+          {editingProduct && (
+            <ProductForm initialData={editingProduct} onSubmit={handleEditProduct} isLoading={isLoading} />
+          )}
+        </DialogContent>
+      </Dialog>
     </Card>
   );
 }

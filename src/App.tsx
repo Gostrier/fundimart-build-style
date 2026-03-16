@@ -15,6 +15,8 @@ import NotFound from "./pages/NotFound";
 import SiteLogoBadge from "@/components/SiteLogoBadge"; // Import the new component
 import BoardPresentation from "./pages/BoardPresentation";
 import Auth from "./pages/Auth";
+import SellerLogin from "./pages/SellerLogin";
+import Logout from "./pages/Logout";
 import Category from "./pages/Category";
 import AdminDashboard from "./pages/AdminDashboard";
 import AdminLogin from "./pages/AdminLogin";
@@ -29,6 +31,8 @@ import Blog from "./pages/Blog";
 import Careers from "./pages/Careers";
 import Shipping from "./pages/Shipping";
 import Returns from "./pages/Returns";
+import DriverRegistration from "./pages/DriverRegistration";
+import LogisticsDashboard from "./pages/LogisticsDashboard";
 import Contact from "./pages/Contact";
 
 const queryClient = new QueryClient();
@@ -62,11 +66,16 @@ const AppContent = () => {
                 <Route path="/product/:id" element={<ProductDetail />} />
                 <Route path="/search" element={<SearchResults />} />
                 <Route path="/auth" element={<Auth />} />
+                <Route path="/seller/login" element={<SellerLogin />} />
+                <Route path="/logout" element={<Logout />} />
                 <Route path="/category/:slug" element={<Category />} />
                 <Route path="/board-presentation" element={<BoardPresentation />} />
                 <Route path="/seller/dashboard" element={<SellerDashboard />} />
                 <Route path="/admin/login" element={<AdminLogin />} />
                 <Route path="/admin/dashboard" element={<AdminDashboard />} />
+                {/* Logistics Pages */}
+                <Route path="/driver/register" element={<DriverRegistration />} />
+                <Route path="/logistics/dashboard" element={<LogisticsDashboard />} />
                 {/* Info & Legal Pages */}
                 <Route path="/terms" element={<Terms />} />
                 <Route path="/privacy" element={<Privacy />} />

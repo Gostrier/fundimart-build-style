@@ -1,5 +1,5 @@
 import { useParams, useNavigate } from "react-router-dom";
-import { products } from "@/data/products";
+import { products as staticProducts } from "@/data/products";
 import Header from "@/components/Header";
 import Footer from "@/components/Footer";
 import { Star, ShoppingCart, Heart, ArrowLeft, ShieldCheck, Truck, RefreshCw } from "lucide-react";
@@ -9,6 +9,7 @@ import { useAuth } from "@/contexts/AuthContext";
 import { toast } from "sonner";
 import ProductCard from "@/components/ProductCard";
 import { useState, useEffect } from "react";
+import { Product } from "@/types/product";
 
 const ProductDetail = () => {
   const { id } = useParams<{ id: string }>();
@@ -16,11 +17,39 @@ const ProductDetail = () => {
   const { addToCart } = useCart();
   const { isAuthenticated } = useAuth();
   const [isFavorited, setIsFavorited] = useState(false);
-
-  const product = products.find((p) => p.id === id);
+  const [product, setProduct] = useState<any>(null);
+  const [allProducts, setAllProducts] = useState<any[]>([]);
 
   useEffect(() => {
     window.scrollTo(0, 0);
+    
+    // Load all products (static + dynamic)
+    const storedProducts = JSON.parse(localStorage.getItem("fundimart_products") || "[]");
+    const formattedStored = storedProducts.map((p: Product) => ({
+      id: p.id,
+      image: p.photos[0] || "https://via.placeholder.com/300x300?text=" + encodeURIComponent(p.name),
+      name: p.name,
+      price: p.price,
+      rating: 4.5,
+      reviews: 12,
+      badge: p.quality ? p.quality : undefined,
+      sellerName: p.sellerName,
+      sellerId: p.sellerId,
+      category: p.category,
+      description: p.description
+    }));
+
+    const formattedStatic = staticProducts.map(p => ({
+      ...p,
+      sellerId: "static-seller",
+      sellerName: "Fundimart"
+    }));
+
+    const combined = [...formattedStored, ...formattedStatic];
+    setAllProducts(combined);
+
+    const found = combined.find((p) => p.id === id);
+    setProduct(found);
   }, [id]);
 
   if (!product) {
@@ -37,12 +66,13 @@ const ProductDetail = () => {
   }
 
   const handleAddToCart = () => {
-    if (!isAuthenticated) {
-      toast.error("Please log in to add items to your cart.");
-      navigate("/auth");
-      return;
-    }
-    addToCart({ image: product.image, name: product.name, price: product.price });
+    addToCart({ 
+      id: product.id, 
+      sellerId: product.sellerId, 
+      image: product.image, 
+      name: product.name, 
+      price: product.price 
+    });
     toast.success(`${product.name} added to cart`);
   };
 
@@ -55,7 +85,7 @@ const ProductDetail = () => {
     }
   };
 
-  const recommendedProducts = products
+  const recommendedProducts = allProducts
     .filter((p) => p.category === product.category && p.id !== product.id)
     .slice(0, 4);
 
@@ -98,15 +128,15 @@ const ProductDetail = () => {
                     <Star
                       key={i}
                       className={`w-4 h-4 ${
-                        i < Math.floor(product.rating)
+                        i < Math.floor(product.rating || 4.5)
                           ? "fill-yellow-400 text-yellow-400"
                           : "fill-muted text-muted"
                       }`}
                     />
                   ))}
-                  <span className="text-sm font-medium ml-1">{product.rating}</span>
+                  <span className="text-sm font-medium ml-1">{product.rating || 4.5}</span>
                 </div>
-                <span className="text-sm text-muted-foreground">({product.reviews} reviews)</span>
+                <span className="text-sm text-muted-foreground">({product.reviews || 0} reviews)</span>
               </div>
               <div className="flex items-baseline gap-3">
                 <span className="text-3xl font-bold text-primary">
@@ -118,12 +148,17 @@ const ProductDetail = () => {
                   </span>
                 )}
               </div>
+              <div className="mt-2">
+                <p className="text-sm text-muted-foreground">
+                  Seller: <span className="text-foreground font-semibold">{product.sellerName}</span>
+                </p>
+              </div>
             </div>
 
             <div className="mb-8 p-4 bg-muted/50 rounded-xl">
               <h3 className="font-semibold mb-2">Description</h3>
               <p className="text-muted-foreground leading-relaxed">
-                {product.description}
+                {product.description || "No description provided."}
               </p>
             </div>
 

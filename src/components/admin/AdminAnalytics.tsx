@@ -1,3 +1,4 @@
+import { useState, useEffect } from 'react';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import {
   LineChart,
@@ -17,102 +18,91 @@ import {
   ResponsiveContainer,
 } from 'recharts';
 import { TrendingUp, ShoppingCart, Users, DollarSign, Package, AlertCircle, CheckCircle } from 'lucide-react';
-
-const SALES_DATA = [
-  { month: 'Jan', sales: 4000, orders: 240, users: 240, revenue: 12000 },
-  { month: 'Feb', sales: 3000, orders: 221, users: 221, revenue: 15500 },
-  { month: 'Mar', sales: 2000, orders: 229, users: 200, revenue: 14200 },
-  { month: 'Apr', sales: 2780, orders: 200, users: 250, revenue: 18900 },
-  { month: 'May', sales: 1890, orders: 348, users: 210, revenue: 16800 },
-  { month: 'Jun', sales: 2390, orders: 320, users: 222, revenue: 19200 },
-];
-
-const CATEGORY_DATA = [
-  { category: 'Building Materials', sales: 8500, value: 8500 },
-  { category: 'Power Tools', sales: 6200, value: 6200 },
-  { category: 'Hand Tools', sales: 5100, value: 5100 },
-  { category: 'Plumbing', sales: 3800, value: 3800 },
-  { category: 'Safety Gear', sales: 2400, value: 2400 },
-];
-
-const CUSTOMER_DATA = [
-  { day: 'Mon', newCustomers: 45, returning: 120 },
-  { day: 'Tue', newCustomers: 52, returning: 135 },
-  { day: 'Wed', newCustomers: 38, returning: 110 },
-  { day: 'Thu', newCustomers: 65, returning: 150 },
-  { day: 'Fri', newCustomers: 78, returning: 165 },
-  { day: 'Sat', newCustomers: 92, returning: 180 },
-  { day: 'Sun', newCustomers: 38, returning: 95 },
-];
-
-const PRODUCT_PERFORMANCE = [
-  { product: 'Cement Bags', sales: 450, rating: 4.8 },
-  { product: 'Power Drill', sales: 320, rating: 4.6 },
-  { product: 'Safety Helmet', sales: 280, rating: 4.5 },
-  { product: 'PVC Pipes', sales: 240, rating: 4.7 },
-  { product: 'Brick Trowel', sales: 190, rating: 4.4 },
-];
+import { Product } from '@/types/product';
 
 const COLORS = ['#3b82f6', '#10b981', '#f59e0b', '#ef4444', '#8b5cf6'];
 
-interface StatCard {
-  icon: React.ReactNode;
-  label: string;
-  value: string;
-  change: string;
-  trend: 'up' | 'down';
-  color: string;
-}
-
-const STAT_CARDS: StatCard[] = [
-  {
-    icon: <DollarSign className="w-6 h-6" />,
-    label: 'Total Revenue',
-    value: 'KES 4,258,000',
-    change: '+12.5% from last month',
-    trend: 'up',
-    color: 'from-blue-600 to-blue-800',
-  },
-  {
-    icon: <ShoppingCart className="w-6 h-6" />,
-    label: 'Total Orders',
-    value: '1,358',
-    change: '+8.2% from last month',
-    trend: 'up',
-    color: 'from-green-600 to-green-800',
-  },
-  {
-    icon: <Users className="w-6 h-6" />,
-    label: 'Total Customers',
-    value: '2,847',
-    change: '+5.3% from last month',
-    trend: 'up',
-    color: 'from-purple-600 to-purple-800',
-  },
-  {
-    icon: <TrendingUp className="w-6 h-6" />,
-    label: 'Average Order Value',
-    value: 'KES 3,140',
-    change: '+2.1% from last month',
-    trend: 'up',
-    color: 'from-amber-600 to-amber-800',
-  },
-];
-
 export default function AdminAnalytics() {
+  const [stats, setStats] = useState({
+    totalRevenue: 0,
+    totalOrders: 0,
+    totalProducts: 0,
+    avgOrderValue: 0
+  });
+
+  const [categoryData, setCategoryData] = useState<any[]>([]);
+  const [recentOrders, setRecentOrders] = useState<any[]>([]);
+
+  useEffect(() => {
+    // Load Data
+    const allProducts: Product[] = JSON.parse(localStorage.getItem("fundimart_products") || "[]");
+    const allOrders = JSON.parse(localStorage.getItem("fundimart_orders") || "[]");
+    
+    // Calculate Stats
+    const totalRev = allOrders.reduce((sum: number, order: any) => sum + order.totalAmount, 0);
+    const totalOrd = allOrders.length;
+    const avgVal = totalOrd > 0 ? totalRev / totalOrd : 0;
+    
+    setStats({
+      totalRevenue: totalRev,
+      totalOrders: totalOrd,
+      totalProducts: allProducts.length,
+      avgOrderValue: avgVal
+    });
+
+    // Calculate Category Distribution
+    const catMap: Record<string, number> = {};
+    allProducts.forEach(p => {
+      catMap[p.category] = (catMap[p.category] || 0) + 1;
+    });
+    
+    const formattedCatData = Object.entries(catMap).map(([name, value]) => ({
+      name: name.split('-').map(word => word.charAt(0).toUpperCase() + word.slice(1)).join(' '),
+      value: value
+    }));
+    
+    setCategoryData(formattedCatData);
+    setRecentOrders(allOrders.sort((a: any, b: any) => b.createdAt - a.createdAt).slice(0, 5));
+
+  }, []);
+
+  const statCards = [
+    {
+      icon: <DollarSign className="w-6 h-6" />,
+      label: 'Total Revenue',
+      value: `KES ${stats.totalRevenue.toLocaleString()}`,
+      color: 'from-blue-600 to-blue-800',
+    },
+    {
+      icon: <ShoppingCart className="w-6 h-6" />,
+      label: 'Total Orders',
+      value: stats.totalOrders.toString(),
+      color: 'from-green-600 to-green-800',
+    },
+    {
+      icon: <Package className="w-6 h-6" />,
+      label: 'Total Products',
+      value: stats.totalProducts.toString(),
+      color: 'from-purple-600 to-purple-800',
+    },
+    {
+      icon: <TrendingUp className="w-6 h-6" />,
+      label: 'Avg Order Value',
+      value: `KES ${stats.avgOrderValue.toLocaleString(undefined, {maximumFractionDigits: 0})}`,
+      color: 'from-amber-600 to-amber-800',
+    },
+  ];
+
   return (
     <div className="space-y-6">
       {/* Stat Cards Grid */}
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
-        {STAT_CARDS.map((stat) => (
+        {statCards.map((stat) => (
           <Card key={stat.label} className={`bg-gradient-to-br ${stat.color} border-0`}>
             <CardContent className="pt-6">
               <div className="flex items-center justify-between mb-4">
                 <div className="p-3 bg-white/20 rounded-lg text-white">
                   {stat.icon}
-                </div>
-                <div className={`text-xs font-semibold ${stat.trend === 'up' ? 'text-green-200' : 'text-red-200'}`}>
-                  {stat.change}
                 </div>
               </div>
               <p className="text-white/80 text-sm">{stat.label}</p>
@@ -122,266 +112,95 @@ export default function AdminAnalytics() {
         ))}
       </div>
 
-      {/* Revenue Trend & Customer Growth */}
       <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
-        <Card className="bg-slate-800 border-slate-700">
-          <CardHeader>
-            <CardTitle className="text-white flex items-center gap-2">
-              <TrendingUp className="w-5 h-5 text-blue-400" />
-              Revenue Trend
-            </CardTitle>
-          </CardHeader>
-          <CardContent>
-            <ResponsiveContainer width="100%" height={300}>
-              <AreaChart data={SALES_DATA}>
-                <defs>
-                  <linearGradient id="colorRevenue" x1="0" y1="0" x2="0" y2="1">
-                    <stop offset="5%" stopColor="#3b82f6" stopOpacity={0.8}/>
-                    <stop offset="95%" stopColor="#3b82f6" stopOpacity={0}/>
-                  </linearGradient>
-                </defs>
-                <CartesianGrid strokeDasharray="3 3" stroke="#334155" />
-                <XAxis dataKey="month" stroke="#94a3b8" />
-                <YAxis stroke="#94a3b8" />
-                <Tooltip
-                   contentStyle={{
-                     backgroundColor: '#1e293b',
-                     border: '1px solid #475569',
-                     borderRadius: '4px',
-                   }}
-                   labelStyle={{ color: '#e2e8f0' }}
-                   formatter={(value) => `KES ${value}`}
-                 />
-                 <Legend />
-                 <Area
-                   type="monotone"
-                   dataKey="revenue"
-                   stroke="#3b82f6"
-                   fillOpacity={1}
-                   fill="url(#colorRevenue)"
-                   name="Monthly Revenue"
-                 />
-               </AreaChart>
-            </ResponsiveContainer>
-          </CardContent>
-        </Card>
-
-        <Card className="bg-slate-800 border-slate-700">
-          <CardHeader>
-            <CardTitle className="text-white flex items-center gap-2">
-              <Users className="w-5 h-5 text-purple-400" />
-              Customer Activity
-            </CardTitle>
-          </CardHeader>
-          <CardContent>
-            <ResponsiveContainer width="100%" height={300}>
-              <BarChart data={CUSTOMER_DATA}>
-                <CartesianGrid strokeDasharray="3 3" stroke="#334155" />
-                <XAxis dataKey="day" stroke="#94a3b8" />
-                <YAxis stroke="#94a3b8" />
-                <Tooltip
-                  contentStyle={{
-                    backgroundColor: '#1e293b',
-                    border: '1px solid #475569',
-                    borderRadius: '4px',
-                  }}
-                  labelStyle={{ color: '#e2e8f0' }}
-                />
-                <Legend />
-                <Bar dataKey="newCustomers" fill="#8b5cf6" radius={[8, 8, 0, 0]} name="New Customers" />
-                <Bar dataKey="returning" fill="#06b6d4" radius={[8, 8, 0, 0]} name="Returning Customers" />
-              </BarChart>
-            </ResponsiveContainer>
-          </CardContent>
-        </Card>
-      </div>
-
-      {/* Category Sales & Product Performance */}
-      <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
+        {/* Category Distribution Chart */}
         <Card className="bg-slate-800 border-slate-700">
           <CardHeader>
             <CardTitle className="text-white flex items-center gap-2">
               <Package className="w-5 h-5 text-amber-400" />
-              Sales by Category
+              Inventory Distribution
             </CardTitle>
           </CardHeader>
           <CardContent>
-            <ResponsiveContainer width="100%" height={300}>
-              <BarChart data={CATEGORY_DATA} layout="vertical">
-                <CartesianGrid strokeDasharray="3 3" stroke="#334155" />
-                <XAxis type="number" stroke="#94a3b8" />
-                <YAxis dataKey="category" type="category" width={120} stroke="#94a3b8" tick={{ fontSize: 12 }} />
-                <Tooltip
-                   contentStyle={{
-                     backgroundColor: '#1e293b',
-                     border: '1px solid #475569',
-                     borderRadius: '4px',
-                   }}
-                   labelStyle={{ color: '#e2e8f0' }}
-                   formatter={(value) => `KES ${value}`}
-                 />
-                 <Bar dataKey="sales" fill="#f59e0b" radius={[0, 8, 8, 0]} />
-              </BarChart>
-            </ResponsiveContainer>
+            {categoryData.length === 0 ? (
+                <div className="h-[300px] flex items-center justify-center text-slate-400">No product data available</div>
+            ) : (
+                <ResponsiveContainer width="100%" height={300}>
+                <PieChart>
+                    <Pie
+                    data={categoryData}
+                    cx="50%"
+                    cy="50%"
+                    labelLine={false}
+                    label={({ name, percent }) => `${name} ${(percent * 100).toFixed(0)}%`}
+                    outerRadius={80}
+                    fill="#8884d8"
+                    dataKey="value"
+                    >
+                    {categoryData.map((entry, index) => (
+                        <Cell key={`cell-${index}`} fill={COLORS[index % COLORS.length]} />
+                    ))}
+                    </Pie>
+                    <Tooltip
+                    contentStyle={{
+                        backgroundColor: '#1e293b',
+                        border: '1px solid #475569',
+                        borderRadius: '4px',
+                    }}
+                    labelStyle={{ color: '#e2e8f0' }}
+                    />
+                </PieChart>
+                </ResponsiveContainer>
+            )}
           </CardContent>
         </Card>
 
+        {/* Recent Activity */}
         <Card className="bg-slate-800 border-slate-700">
           <CardHeader>
             <CardTitle className="text-white flex items-center gap-2">
               <CheckCircle className="w-5 h-5 text-green-400" />
-              Top Products
+              Recent Orders
             </CardTitle>
           </CardHeader>
           <CardContent>
-            <ResponsiveContainer width="100%" height={300}>
-              <BarChart data={PRODUCT_PERFORMANCE}>
-                <CartesianGrid strokeDasharray="3 3" stroke="#334155" />
-                <XAxis dataKey="product" stroke="#94a3b8" tick={{ fontSize: 12 }} angle={-45} textAnchor="end" height={80} />
-                <YAxis stroke="#94a3b8" />
-                <Tooltip
-                  contentStyle={{
-                    backgroundColor: '#1e293b',
-                    border: '1px solid #475569',
-                    borderRadius: '4px',
-                  }}
-                  labelStyle={{ color: '#e2e8f0' }}
-                />
-                <Bar dataKey="sales" fill="#10b981" radius={[8, 8, 0, 0]} name="Sales" />
-              </BarChart>
-            </ResponsiveContainer>
+            {recentOrders.length === 0 ? (
+                <div className="h-[300px] flex items-center justify-center text-slate-400">No orders recorded yet.</div>
+            ) : (
+                <div className="space-y-4">
+                    {recentOrders.map((order, i) => (
+                        <div key={i} className="flex items-center justify-between border-b border-slate-700 pb-3 last:border-0">
+                            <div>
+                                <p className="text-white font-medium">Order #{order.id.split('_')[1]}</p>
+                                <p className="text-slate-400 text-xs">{new Date(order.createdAt).toLocaleString()}</p>
+                            </div>
+                            <div className="text-right">
+                                <p className="text-green-400 font-bold">KES {order.totalAmount.toLocaleString()}</p>
+                                <p className="text-slate-400 text-xs">{order.phoneNumber}</p>
+                            </div>
+                        </div>
+                    ))}
+                </div>
+            )}
           </CardContent>
         </Card>
       </div>
 
-      {/* Category Distribution & Orders vs Revenue */}
-      <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
-        <Card className="bg-slate-800 border-slate-700">
-          <CardHeader>
-            <CardTitle className="text-white flex items-center gap-2">
-              <Package className="w-5 h-5 text-pink-400" />
-              Category Distribution
+      {/* Low Stock Alert */}
+      <Card className="bg-slate-800 border-slate-700 border-l-4 border-l-amber-500">
+        <CardHeader className="pb-2">
+            <CardTitle className="text-white text-lg flex items-center gap-2">
+                <AlertCircle className="w-5 h-5 text-amber-500" />
+                Inventory Summary
             </CardTitle>
-          </CardHeader>
-          <CardContent>
-            <ResponsiveContainer width="100%" height={300}>
-              <PieChart>
-                <Pie
-                   data={CATEGORY_DATA}
-                   cx="50%"
-                   cy="50%"
-                   labelLine={false}
-                   label={({ category, value }) => `${category}: KES ${value}`}
-                   outerRadius={80}
-                   fill="#8884d8"
-                   dataKey="value"
-                 >
-                   {CATEGORY_DATA.map((entry, index) => (
-                     <Cell key={`cell-${index}`} fill={COLORS[index % COLORS.length]} />
-                   ))}
-                 </Pie>
-                 <Tooltip
-                   contentStyle={{
-                     backgroundColor: '#1e293b',
-                     border: '1px solid #475569',
-                     borderRadius: '4px',
-                   }}
-                   labelStyle={{ color: '#e2e8f0' }}
-                   formatter={(value) => `KES ${value}`}
-                 />
-              </PieChart>
-            </ResponsiveContainer>
-          </CardContent>
-        </Card>
-
-        <Card className="bg-slate-800 border-slate-700">
-          <CardHeader>
-            <CardTitle className="text-white flex items-center gap-2">
-              <ShoppingCart className="w-5 h-5 text-red-400" />
-              Orders vs Revenue
-            </CardTitle>
-          </CardHeader>
-          <CardContent>
-            <ResponsiveContainer width="100%" height={300}>
-              <LineChart data={SALES_DATA}>
-                <CartesianGrid strokeDasharray="3 3" stroke="#334155" />
-                <XAxis dataKey="month" stroke="#94a3b8" />
-                <YAxis yAxisId="left" stroke="#94a3b8" />
-                <YAxis yAxisId="right" orientation="right" stroke="#94a3b8" />
-                <Tooltip
-                  contentStyle={{
-                    backgroundColor: '#1e293b',
-                    border: '1px solid #475569',
-                    borderRadius: '4px',
-                  }}
-                  labelStyle={{ color: '#e2e8f0' }}
-                />
-                <Legend />
-                <Line
-                  yAxisId="left"
-                  type="monotone"
-                  dataKey="orders"
-                  stroke="#10b981"
-                  strokeWidth={2}
-                  dot={{ fill: '#10b981', r: 4 }}
-                  name="Orders"
-                />
-                <Line
-                  yAxisId="right"
-                  type="monotone"
-                  dataKey="revenue"
-                  stroke="#ef4444"
-                  strokeWidth={2}
-                  dot={{ fill: '#ef4444', r: 4 }}
-                   name="Revenue (KES)"
-                />
-              </LineChart>
-            </ResponsiveContainer>
-          </CardContent>
-        </Card>
-      </div>
-
-      {/* Summary Cards */}
-      <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
-        <Card className="bg-slate-800 border-slate-700">
-          <CardContent className="pt-6">
-            <div className="flex items-start justify-between">
-              <div>
-                <p className="text-slate-400 text-sm mb-2">Conversion Rate</p>
-                <p className="text-2xl font-bold text-white">4.2%</p>
-                <p className="text-xs text-green-400 mt-2">↑ 0.5% from last month</p>
-              </div>
-              <CheckCircle className="w-8 h-8 text-green-400" />
-            </div>
-          </CardContent>
-        </Card>
-
-        <Card className="bg-slate-800 border-slate-700">
-          <CardContent className="pt-6">
-            <div className="flex items-start justify-between">
-              <div>
-                <p className="text-slate-400 text-sm mb-2">Cart Abandonment</p>
-                <p className="text-2xl font-bold text-white">12.8%</p>
-                <p className="text-xs text-red-400 mt-2">↑ 1.2% from last month</p>
-              </div>
-              <AlertCircle className="w-8 h-8 text-red-400" />
-            </div>
-          </CardContent>
-        </Card>
-
-        <Card className="bg-slate-800 border-slate-700">
-          <CardContent className="pt-6">
-            <div className="flex items-start justify-between">
-              <div>
-                <p className="text-slate-400 text-sm mb-2">Avg. Session Duration</p>
-                <p className="text-2xl font-bold text-white">3m 24s</p>
-                <p className="text-xs text-green-400 mt-2">↑ 18s from last month</p>
-              </div>
-              <TrendingUp className="w-8 h-8 text-green-400" />
-            </div>
-          </CardContent>
-        </Card>
-      </div>
+        </CardHeader>
+        <CardContent>
+            <p className="text-slate-300">
+                You currently have <span className="text-white font-bold">{stats.totalProducts}</span> products listed across all categories. 
+                System status is <span className="text-green-400 font-semibold">Healthy</span>.
+            </p>
+        </CardContent>
+      </Card>
     </div>
   );
 }
