@@ -27,6 +27,7 @@ import CookiePolicy from "./pages/CookiePolicy";
 import About from "./pages/About";
 import HelpCenter from "./pages/HelpCenter";
 import TrackOrder from "./pages/TrackOrder";
+import OrderSuccess from "./pages/OrderSuccess";
 import Blog from "./pages/Blog";
 import Careers from "./pages/Careers";
 import Shipping from "./pages/Shipping";
@@ -84,6 +85,7 @@ const AppContent = () => {
                 <Route path="/about" element={<About />} />
                 <Route path="/help" element={<HelpCenter />} />
                 <Route path="/track-order" element={<TrackOrder />} />
+                <Route path="/order-success" element={<OrderSuccess />} />
                 <Route path="/blog" element={<Blog />} />
                 <Route path="/careers" element={<Careers />} />
                 <Route path="/shipping" element={<Shipping />} />
