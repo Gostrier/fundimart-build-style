@@ -1,12 +1,39 @@
 import { Facebook, Twitter, Instagram, Youtube, Mail, Phone, MapPin } from "lucide-react";
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import fundimartLogo from "@/assets/fundimart-logo.jpeg";
 import { useAuth } from "@/contexts/AuthContext";
+import { useState, useRef } from "react";
 
 const Footer = () => {
   const { user } = useAuth();
+  const navigate = useNavigate();
+  const [clickCount, setClickCount] = useState(0);
+  const clickTimerRef = useRef<NodeJS.Timeout | null>(null);
+
+  const handleAdminClick = (e: React.MouseEvent) => {
+    e.preventDefault();
+    
+    // Clear existing timer
+    if (clickTimerRef.current) {
+      clearTimeout(clickTimerRef.current);
+    }
+
+    const newCount = clickCount + 1;
+    
+    if (newCount === 3) {
+      setClickCount(0);
+      navigate("/admin/login");
+    } else {
+      setClickCount(newCount);
+      // Reset count if next click doesn't happen within 1 second
+      clickTimerRef.current = setTimeout(() => {
+        setClickCount(0);
+      }, 1000);
+    }
+  };
+
   return (
     <footer className="bg-foreground text-background">
       {/* Newsletter */}
@@ -79,7 +106,14 @@ const Footer = () => {
               <li><Link to="/blog" className="text-background/70 hover:text-primary transition-colors">Blog & Resources</Link></li>
               <li><Link to="/careers" className="text-background/70 hover:text-primary transition-colors">Careers</Link></li>
               <li><Link to="/contact" className="text-background/70 hover:text-primary transition-colors">Contact</Link></li>
-              <li><Link to="/admin/login" className="text-background/70 hover:text-primary transition-colors">Admin Access</Link></li>
+              <li>
+                <button 
+                  onClick={handleAdminClick}
+                  className="text-background/70 hover:text-primary transition-colors text-left"
+                >
+                  Thank you and welcome again
+                </button>
+              </li>
             </ul>
           </div>
 

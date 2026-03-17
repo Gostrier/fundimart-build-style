@@ -93,16 +93,18 @@ const Header = () => {
           <div className="flex items-center gap-2">
             <ThemeToggle />
             {!user ? (
-              <Link to="/auth">
-                <Button variant="ghost" size="icon" className="hidden md:flex">
+              <Link to="/auth" className="flex flex-col items-center">
+                <Button variant="ghost" size="icon">
                   <User className="w-5 h-5" />
                 </Button>
+                <span className="text-[10px] md:text-xs font-medium text-foreground">Login</span>
               </Link>
             ) : (
-              <Link to={user.role === 'seller' ? '/seller/dashboard' : '/profile'}>
-                <Button variant="ghost" size="icon" className="hidden md:flex">
+              <Link to={user.role === 'seller' ? '/seller/dashboard' : '/profile'} className="flex flex-col items-center">
+                <Button variant="ghost" size="icon">
                   <User className="w-5 h-5" />
                 </Button>
+                <span className="text-[10px] md:text-xs font-medium text-foreground">{user.role === 'seller' ? 'Seller' : 'Profile'}</span>
               </Link>
             )}
             <CartSheet />
