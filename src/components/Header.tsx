@@ -2,37 +2,27 @@ import { Search, Menu, User, LogOut } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { useState } from "react";
-import { Link, useNavigate } from "react-router-dom"; // Import useNavigate
+import { Link, useNavigate } from "react-router-dom";
 import fundimartLogo from "@/assets/fundimart-logo.jpeg";
 import CartSheet from "@/components/CartSheet";
 import ThemeToggle from "@/components/ThemeToggle";
 import { useAuth } from "@/contexts/AuthContext";
+import { categoryItems } from "@/data/categories";
 
 const Header = () => {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
-  const [searchQuery, setSearchQuery] = useState(""); // State for search input
-  const navigate = useNavigate(); // Initialize useNavigate
+  const [searchQuery, setSearchQuery] = useState("");
+  const navigate = useNavigate();
   const { user } = useAuth();
 
   const handleSearch = (e?: React.FormEvent) => {
     if (e) e.preventDefault();
     if (searchQuery.trim()) {
       navigate(`/search?query=${encodeURIComponent(searchQuery.trim())}`);
-      setIsMenuOpen(false); // Close mobile menu after search
-      setSearchQuery(""); // Clear search input
+      setIsMenuOpen(false);
+      setSearchQuery("");
     }
   };
-
-  const navLinks = [
-    { name: "Cement", slug: "cement" },
-    { name: "Steel", slug: "steel" },
-    { name: "Timber", slug: "timber" },
-    { name: "Sand & Ballast", slug: "sand-and-ballast" },
-    { name: "Roofing", slug: "roofing-materials" },
-    { name: "Plumbing", slug: "plumbing-materials" },
-    { name: "Electrical", slug: "electrical-materials" },
-    { name: "Tiles & Finishing", slug: "tiles-and-finishing-materials" },
-  ];
 
   return (
     <header className="sticky top-0 z-50 bg-background border-b border-border">
@@ -119,19 +109,6 @@ const Header = () => {
           </div>
         </div>
 
-        {/* Navigation - desktop */}
-        <nav className="hidden md:flex items-center gap-6 py-3 overflow-x-auto no-scrollbar">
-          {navLinks.map((link) => (
-            <Link
-              key={link.slug}
-              to={`/category/${link.slug}`}
-              className="font-medium text-foreground hover:text-primary transition-colors whitespace-nowrap"
-            >
-              {link.name}
-            </Link>
-          ))}
-        </nav>
-
         {/* Mobile menu */}
         {isMenuOpen && (
           <div className="md:hidden py-4 border-t border-border">
@@ -162,14 +139,14 @@ const Header = () => {
                   Logout
                 </Link>
               )}
-              {navLinks.map((link) => (
+              {categoryItems.map((category) => (
                 <Link
-                  key={link.slug}
-                  to={`/category/${link.slug}`}
+                  key={category.slug}
+                  to={`/category/${category.slug}`}
                   className="font-medium text-foreground hover:text-primary transition-colors py-2"
                   onClick={() => setIsMenuOpen(false)}
                 >
-                  {link.name}
+                  {category.name}
                 </Link>
               ))}
             </nav>

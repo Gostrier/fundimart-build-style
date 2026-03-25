@@ -10,6 +10,7 @@ import { Edit, Trash2, Plus, LogOut, Store, MapPin, Mail, Phone, BarChart3, Pack
 import { ProductForm } from "@/components/ProductForm";
 import { useAuth } from "@/contexts/AuthContext";
 import { Product } from "@/types/product";
+import { toast } from "sonner";
 
 const SellerDashboard = () => {
   const navigate = useNavigate();
@@ -96,9 +97,10 @@ const SellerDashboard = () => {
         ...data,
         id: `product_${Date.now()}`,
         sellerId: user?.id || "",
-        sellerName: `${user?.firstName} ${user?.lastName}`,
+        sellerName: user?.seller?.hardwareName || `${user?.firstName} ${user?.lastName}`,
         createdAt: Date.now(),
         updatedAt: Date.now(),
+        status: "active",
       };
 
       const allProducts = JSON.parse(localStorage.getItem("fundimart_products") || "[]");
@@ -109,7 +111,9 @@ const SellerDashboard = () => {
       setIsAddingProduct(false);
       
       setStats(prev => ({ ...prev, activeListings: prev.activeListings + 1 }));
-      alert("Product added successfully!");
+      toast.success("Product added successfully!");
+    } catch (error) {
+      toast.error("Failed to add product");
     } finally {
       setIsLoading(false);
     }
@@ -122,6 +126,10 @@ const SellerDashboard = () => {
       const updatedProduct: Product = {
         ...editingProduct,
         ...data,
+        // Ensure critical fields are preserved and not overwritten by empty strings from form
+        sellerId: editingProduct.sellerId,
+        sellerName: editingProduct.sellerName,
+        status: data.status || editingProduct.status,
         updatedAt: Date.now(),
       };
       const allProducts = JSON.parse(localStorage.getItem("fundimart_products") || "[]");
@@ -132,7 +140,9 @@ const SellerDashboard = () => {
       }
       setProducts(products.map((p) => (p.id === editingProduct.id ? updatedProduct : p)));
       setEditingProduct(null);
-      alert("Product updated successfully!");
+      toast.success("Product updated successfully!");
+    } catch (error) {
+      toast.error("Failed to update product");
     } finally {
       setIsLoading(false);
     }

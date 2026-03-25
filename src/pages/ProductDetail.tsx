@@ -8,6 +8,7 @@ import { useCart } from "@/contexts/CartContext";
 import { useAuth } from "@/contexts/AuthContext";
 import { toast } from "sonner";
 import ProductCard from "@/components/ProductCard";
+import ProductReviews from "@/components/ProductReviews";
 import { useState, useEffect } from "react";
 import { Product } from "@/types/product";
 
@@ -49,6 +50,19 @@ const ProductDetail = () => {
     setAllProducts(combined);
 
     const found = combined.find((p) => p.id === id);
+    
+    // Calculate real ratings from reviews
+    if (found) {
+      const allReviews = JSON.parse(localStorage.getItem("fundimart_reviews") || "[]");
+      const productReviews = allReviews.filter((r: any) => r.productId === found.id);
+      
+      if (productReviews.length > 0) {
+        const avgRating = productReviews.reduce((acc: number, r: any) => acc + r.rating, 0) / productReviews.length;
+        found.rating = parseFloat(avgRating.toFixed(1));
+        found.reviews = productReviews.length;
+      }
+    }
+    
     setProduct(found);
   }, [id]);
 
@@ -210,6 +224,8 @@ const ProductDetail = () => {
             </div>
           </div>
         </div>
+
+        <ProductReviews productId={product.id} />
 
         {/* Recommended Products */}
         {recommendedProducts.length > 0 && (

@@ -22,11 +22,6 @@ const Auth = () => {
   const [isLoading, setIsLoading] = useState(false);
   const [error, setError] = useState("");
   
-  // OTP States
-  const [step, setStep] = useState<"form" | "otp">("form");
-  const [otpValue, setOtpValue] = useState("");
-  const [tempData, setTempData] = useState<any>(null);
-
   useEffect(() => {
     const tab = searchParams.get("tab");
     const role = searchParams.get("role");
@@ -68,118 +63,38 @@ const Auth = () => {
       return;
     }
 
-    const email = registrationType === "buyer" ? data['register-email'] : data['seller-email'];
-    
     setIsLoading(true);
     try {
-      await sendOTP(email);
-      setTempData(data);
-      setStep("otp");
-    } catch (err: any) {
-      setError(err.message || "Failed to send OTP");
-    } finally {
-      setIsLoading(false);
-    }
-  };
-
-  const handleVerifyAndRegister = async (e: React.FormEvent) => {
-    e.preventDefault();
-    setError("");
-    
-    if (otpValue.length !== 6) {
-      setError("Please enter a 6-digit OTP");
-      return;
-    }
-
-    setIsLoading(true);
-    try {
-      const email = registrationType === "buyer" ? tempData['register-email'] : tempData['seller-email'];
-      const isValid = await verifyOTP(email, otpValue);
-      
-      if (!isValid) {
-        throw new Error("Invalid OTP code. Please try again.");
-      }
-
       if (registrationType === "buyer") {
         await registerBuyer(
-          tempData['first-name'],
-          tempData['last-name'],
-          tempData['register-email'],
-          tempData['phone'],
-          tempData['register-password']
+          data['first-name'],
+          data['last-name'],
+          data['register-email'],
+          data['phone'],
+          data['register-password']
         );
         toast.success("Account created successfully!");
         navigate("/");
       } else {
         await registerSeller(
-          tempData['seller-first-name'],
-          tempData['seller-last-name'],
-          tempData['seller-email'],
-          tempData['seller-phone'],
-          tempData['seller-password'],
-          tempData['hardware-name'],
-          tempData['location'],
-          tempData['firm-email']
+          data['seller-first-name'],
+          data['seller-last-name'],
+          data['seller-email'],
+          data['seller-phone'],
+          data['seller-password'],
+          data['hardware-name'],
+          data['location'],
+          data['firm-email']
         );
         toast.success("Seller account created! Welcome to the marketplace.");
         navigate("/seller/dashboard");
       }
     } catch (err: any) {
-      setError(err.message || "Verification failed");
+      setError(err.message || "Registration failed");
     } finally {
       setIsLoading(false);
     }
   };
-
-  if (step === "otp") {
-    return (
-      <div className="min-h-screen bg-muted/30 flex flex-col items-center justify-center px-4">
-        <Card className="w-full max-w-md">
-          <CardHeader className="text-center">
-            <div className="mx-auto w-12 h-12 bg-primary/10 rounded-full flex items-center justify-center mb-4">
-              <ShieldCheck className="h-6 w-6 text-primary" />
-            </div>
-            <CardTitle className="text-2xl font-bold">Verify Email</CardTitle>
-            <CardDescription>
-              Enter the 6-digit code sent to {registrationType === "buyer" ? tempData['register-email'] : tempData['seller-email']}
-            </CardDescription>
-          </CardHeader>
-          <CardContent>
-            <form onSubmit={handleVerifyAndRegister} className="space-y-6">
-              {error && (
-                <div className="p-3 bg-red-50 border border-red-200 text-red-700 rounded-md text-sm">
-                  {error}
-                </div>
-              )}
-              <div className="space-y-2">
-                <Label htmlFor="otp">OTP Code</Label>
-                <Input
-                  id="otp"
-                  type="text"
-                  maxLength={6}
-                  placeholder="000000"
-                  className="text-center text-2xl tracking-[0.5em] font-bold h-14"
-                  value={otpValue}
-                  onChange={(e) => setOtpValue(e.target.value.replace(/\D/g, ""))}
-                  required
-                />
-              </div>
-              <Button type="submit" className="w-full h-12" disabled={isLoading}>
-                {isLoading ? "Verifying..." : "Verify & Complete"}
-              </Button>
-              <button
-                type="button"
-                onClick={() => setStep("form")}
-                className="w-full text-sm text-muted-foreground hover:text-primary flex items-center justify-center gap-2"
-              >
-                <ArrowLeft className="h-4 w-4" /> Edit registration details
-              </button>
-            </form>
-          </CardContent>
-        </Card>
-      </div>
-    );
-  }
 
   return (
     <div className="min-h-screen bg-muted/30 flex flex-col">
@@ -414,7 +329,7 @@ const Auth = () => {
                     </div>
 
                     <Button type="submit" className="w-full h-11" disabled={isLoading}>
-                      {isLoading ? "Sending OTP..." : "Get OTP & Register"}
+                      {isLoading ? "Creating Account..." : "Create Account"}
                     </Button>
                   </form>
                 )}
@@ -569,7 +484,7 @@ const Auth = () => {
                     </div>
 
                     <Button type="submit" className="w-full h-11" disabled={isLoading}>
-                      {isLoading ? "Sending OTP..." : "Get OTP & Create Seller Account"}
+                      {isLoading ? "Creating Seller Account..." : "Create Seller Account"}
                     </Button>
                   </form>
                 )}

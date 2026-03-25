@@ -13,6 +13,7 @@ import { Dialog, DialogContent, DialogDescription, DialogHeader, DialogTitle } f
 import { ProductForm } from '@/components/ProductForm';
 import { Edit2, Trash2, Plus } from 'lucide-react';
 import { Product } from '@/types/product';
+import { toast } from 'sonner';
 
 export default function AdminProducts() {
   const [products, setProducts] = useState<Product[]>([]);
@@ -44,7 +45,9 @@ export default function AdminProducts() {
 
       setProducts([...products, newProduct]);
       setShowAddModal(false);
-      alert("Product added successfully!");
+      toast.success("Product added successfully!");
+    } catch (error) {
+      toast.error("Failed to add product");
     } finally {
       setIsLoading(false);
     }
@@ -57,6 +60,8 @@ export default function AdminProducts() {
       const updatedProduct: Product = {
         ...editingProduct,
         ...data,
+        sellerId: editingProduct.sellerId,
+        sellerName: editingProduct.sellerName,
         updatedAt: Date.now(),
       };
 
@@ -69,7 +74,9 @@ export default function AdminProducts() {
 
       setProducts(products.map(p => p.id === editingProduct.id ? updatedProduct : p));
       setEditingProduct(null);
-      alert("Product updated successfully!");
+      toast.success("Product updated successfully!");
+    } catch (error) {
+      toast.error("Failed to update product");
     } finally {
       setIsLoading(false);
     }
@@ -77,10 +84,15 @@ export default function AdminProducts() {
 
   const handleDeleteProduct = (id: string) => {
     if (confirm("Are you sure you want to delete this product?")) {
-      const allProducts = JSON.parse(localStorage.getItem("fundimart_products") || "[]");
-      const filtered = allProducts.filter((p: Product) => p.id !== id);
-      localStorage.setItem("fundimart_products", JSON.stringify(filtered));
-      setProducts(filtered);
+      try {
+        const allProducts = JSON.parse(localStorage.getItem("fundimart_products") || "[]");
+        const filtered = allProducts.filter((p: Product) => p.id !== id);
+        localStorage.setItem("fundimart_products", JSON.stringify(filtered));
+        setProducts(filtered);
+        toast.success("Product deleted successfully");
+      } catch (error) {
+        toast.error("Failed to delete product");
+      }
     }
   };
 
