@@ -11,9 +11,10 @@ import {
 } from '@/components/ui/table';
 import { Dialog, DialogContent, DialogDescription, DialogHeader, DialogTitle } from "@/components/ui/dialog";
 import { ProductForm } from '@/components/ProductForm';
-import { Edit2, Trash2, Plus } from 'lucide-react';
+import { Edit2, Trash2, Plus, Lock } from 'lucide-react';
 import { Product } from '@/types/product';
 import { toast } from 'sonner';
+import { products as staticProducts } from '@/data/products';
 
 export default function AdminProducts() {
   const [products, setProducts] = useState<Product[]>([]);
@@ -22,8 +23,28 @@ export default function AdminProducts() {
   const [isLoading, setIsLoading] = useState(false);
 
   useEffect(() => {
-    const allProducts = JSON.parse(localStorage.getItem("fundimart_products") || "[]");
-    setProducts(allProducts);
+    // 1. Format static products to match the Product type
+    const formattedStatic: Product[] = staticProducts.map(p => ({
+      id: p.id,
+      name: p.name,
+      category: p.category,
+      price: p.price,
+      stock: 100, // Default for static
+      photos: [p.image],
+      sellerId: "static",
+      sellerName: "Fundimart Static",
+      status: "active",
+      createdAt: Date.now(),
+      updatedAt: Date.now(),
+      quality: p.badge || "Standard",
+      description: p.description
+    }));
+
+    // 2. Load stored products from localStorage
+    const storedProducts = JSON.parse(localStorage.getItem("fundimart_products") || "[]");
+    
+    // 3. Combine them
+    setProducts([...storedProducts, ...formattedStatic]);
   }, []);
 
   const handleAddProduct = async (data: Omit<Product, 'id' | 'createdAt' | 'updatedAt'>) => {
@@ -39,11 +60,28 @@ export default function AdminProducts() {
         status: "active",
       };
 
-      const allProducts = JSON.parse(localStorage.getItem("fundimart_products") || "[]");
-      allProducts.push(newProduct);
-      localStorage.setItem("fundimart_products", JSON.stringify(allProducts));
+      const allStoredProducts = JSON.parse(localStorage.getItem("fundimart_products") || "[]");
+      allStoredProducts.push(newProduct);
+      localStorage.setItem("fundimart_products", JSON.stringify(allStoredProducts));
 
-      setProducts([...products, newProduct]);
+      // Refresh product list including static ones
+      const formattedStatic: Product[] = staticProducts.map(p => ({
+        id: p.id,
+        name: p.name,
+        category: p.category,
+        price: p.price,
+        stock: 100,
+        photos: [p.image],
+        sellerId: "static",
+        sellerName: "Fundimart Static",
+        status: "active",
+        createdAt: Date.now(),
+        updatedAt: Date.now(),
+        quality: p.badge || "Standard",
+        description: p.description
+      }));
+      setProducts([...allStoredProducts, ...formattedStatic]);
+      
       setShowAddModal(false);
       toast.success("Product added successfully!");
     } catch (error) {
@@ -65,14 +103,31 @@ export default function AdminProducts() {
         updatedAt: Date.now(),
       };
 
-      const allProducts = JSON.parse(localStorage.getItem("fundimart_products") || "[]");
-      const index = allProducts.findIndex((p: Product) => p.id === editingProduct.id);
+      const allStoredProducts = JSON.parse(localStorage.getItem("fundimart_products") || "[]");
+      const index = allStoredProducts.findIndex((p: Product) => p.id === editingProduct.id);
       if (index !== -1) {
-        allProducts[index] = updatedProduct;
-        localStorage.setItem("fundimart_products", JSON.stringify(allProducts));
+        allStoredProducts[index] = updatedProduct;
+        localStorage.setItem("fundimart_products", JSON.stringify(allStoredProducts));
       }
 
-      setProducts(products.map(p => p.id === editingProduct.id ? updatedProduct : p));
+      // Refresh product list including static ones
+      const formattedStatic: Product[] = staticProducts.map(p => ({
+        id: p.id,
+        name: p.name,
+        category: p.category,
+        price: p.price,
+        stock: 100,
+        photos: [p.image],
+        sellerId: "static",
+        sellerName: "Fundimart Static",
+        status: "active",
+        createdAt: Date.now(),
+        updatedAt: Date.now(),
+        quality: p.badge || "Standard",
+        description: p.description
+      }));
+      setProducts([...allStoredProducts, ...formattedStatic]);
+
       setEditingProduct(null);
       toast.success("Product updated successfully!");
     } catch (error) {
@@ -85,10 +140,28 @@ export default function AdminProducts() {
   const handleDeleteProduct = (id: string) => {
     if (confirm("Are you sure you want to delete this product?")) {
       try {
-        const allProducts = JSON.parse(localStorage.getItem("fundimart_products") || "[]");
-        const filtered = allProducts.filter((p: Product) => p.id !== id);
+        const allStoredProducts = JSON.parse(localStorage.getItem("fundimart_products") || "[]");
+        const filtered = allStoredProducts.filter((p: Product) => p.id !== id);
         localStorage.setItem("fundimart_products", JSON.stringify(filtered));
-        setProducts(filtered);
+        
+        // Refresh product list including static ones
+        const formattedStatic: Product[] = staticProducts.map(p => ({
+          id: p.id,
+          name: p.name,
+          category: p.category,
+          price: p.price,
+          stock: 100,
+          photos: [p.image],
+          sellerId: "static",
+          sellerName: "Fundimart Static",
+          status: "active",
+          createdAt: Date.now(),
+          updatedAt: Date.now(),
+          quality: p.badge || "Standard",
+          description: p.description
+        }));
+        setProducts([...filtered, ...formattedStatic]);
+
         toast.success("Product deleted successfully");
       } catch (error) {
         toast.error("Failed to delete product");
@@ -101,7 +174,7 @@ export default function AdminProducts() {
       <CardHeader className="flex flex-row items-center justify-between">
         <div>
           <CardTitle className="text-white">Products Management</CardTitle>
-          <p className="text-sm text-slate-400 mt-1">{products.length} total products</p>
+          <p className="text-sm text-slate-400 mt-1">{products.length} total products (System + Seller)</p>
         </div>
         <Button onClick={() => setShowAddModal(true)} className="gap-2">
           <Plus size={18} />
@@ -129,39 +202,53 @@ export default function AdminProducts() {
                   </TableCell>
                 </TableRow>
               ) : (
-                products.map((product) => (
-                  <TableRow key={product.id} className="border-slate-700">
-                    <TableCell className="text-white font-medium">{product.name}</TableCell>
-                    <TableCell className="text-slate-300">{product.category}</TableCell>
-                    <TableCell className="text-slate-300">KES {product.price.toLocaleString()}</TableCell>
-                    <TableCell className="text-slate-300">{product.stock} units</TableCell>
-                    <TableCell className="text-slate-300">
-                      <span className="text-xs px-2 py-1 bg-slate-700 rounded-full">
-                        {product.sellerName}
-                      </span>
-                    </TableCell>
-                    <TableCell className="space-x-2">
-                      <Button
-                        variant="outline"
-                        size="sm"
-                        onClick={() => setEditingProduct(product)}
-                        className="gap-2"
-                      >
-                        <Edit2 size={16} />
-                        Edit
-                      </Button>
-                      <Button
-                        variant="destructive"
-                        size="sm"
-                        onClick={() => handleDeleteProduct(product.id)}
-                        className="gap-2"
-                      >
-                        <Trash2 size={16} />
-                        Delete
-                      </Button>
-                    </TableCell>
-                  </TableRow>
-                ))
+                products.map((product) => {
+                  const isStatic = product.sellerId === "static";
+                  return (
+                    <TableRow key={product.id} className="border-slate-700">
+                      <TableCell className="text-white font-medium">
+                        <div className="flex items-center gap-2">
+                          {product.name}
+                          {isStatic && <Lock className="w-3 h-3 text-slate-500" title="System Product" />}
+                        </div>
+                      </TableCell>
+                      <TableCell className="text-slate-300">{product.category}</TableCell>
+                      <TableCell className="text-slate-300">KES {product.price.toLocaleString()}</TableCell>
+                      <TableCell className="text-slate-300">{product.stock} units</TableCell>
+                      <TableCell className="text-slate-300">
+                        <span className={`text-xs px-2 py-1 rounded-full ${isStatic ? 'bg-slate-600' : 'bg-slate-700'}`}>
+                          {product.sellerName}
+                        </span>
+                      </TableCell>
+                      <TableCell className="space-x-2">
+                        {!isStatic ? (
+                          <>
+                            <Button
+                              variant="outline"
+                              size="sm"
+                              onClick={() => setEditingProduct(product)}
+                              className="gap-2"
+                            >
+                              <Edit2 size={16} />
+                              Edit
+                            </Button>
+                            <Button
+                              variant="destructive"
+                              size="sm"
+                              onClick={() => handleDeleteProduct(product.id)}
+                              className="gap-2"
+                            >
+                              <Trash2 size={16} />
+                              Delete
+                            </Button>
+                          </>
+                        ) : (
+                          <span className="text-xs text-slate-500 italic">System Product</span>
+                        )}
+                      </TableCell>
+                    </TableRow>
+                  );
+                })
               )}
             </TableBody>
           </Table>
