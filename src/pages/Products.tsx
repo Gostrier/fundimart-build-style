@@ -28,8 +28,15 @@ const Products = () => {
     let displayProducts = [...formattedStatic];
     try {
       const storedProducts = JSON.parse(localStorage.getItem("fundimart_products") || "[]");
+      const allUsers = JSON.parse(localStorage.getItem("fundimart_users") || "[]");
+
       // Convert stored products to ProductCard format
-      const formattedStored = storedProducts.map((p: Product) => ({
+      const formattedStored = storedProducts
+        .filter((p: Product) => {
+          const seller = allUsers.find((u: any) => u.id === p.sellerId)?.seller;
+          return seller?.isVerified;
+        })
+        .map((p: Product) => ({
         id: p.id,
         image: p.photos[0] || "https://via.placeholder.com/300x300?text=" + encodeURIComponent(p.name),
         name: p.name,

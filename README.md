@@ -75,3 +75,16 @@ For production deployments, ensure all environment variables are properly config
 - **Responsive Design**: Optimized for desktop, tablet, and mobile devices
 - **Dark Mode Support**: Theme toggle for user preference
 - **Search Functionality**: Find products quickly with search feature
+- **Fundi-AI**: Intelligent construction assistant powered by Gemini API
+
+## Fundi-AI Integration
+
+Fundi-AI is a chat assistant integrated into the platform to help users with inquiries about products, construction advice, and platform services.
+
+To enable Fundi-AI, add your Google Gemini API key to your `.env` file:
+
+```env
+VITE_GEMINI_API_KEY=your_gemini_api_key_here
+```
+
+You can obtain an API key from the [Google AI Studio](https://aistudio.google.com/).

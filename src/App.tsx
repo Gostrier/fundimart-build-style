@@ -8,6 +8,7 @@ import { CartProvider } from "@/contexts/CartContext";
 import { AuthProvider } from "@/contexts/AuthContext";
 import { useEffect } from "react";
 import Index from "./pages/Index";
+import HowItWorks from "./pages/HowItWorks";
 import Products from "./pages/Products";
 import ProductDetail from "./pages/ProductDetail";
 import SearchResults from "./pages/SearchResults";
@@ -35,6 +36,9 @@ import Returns from "./pages/Returns";
 import DriverRegistration from "./pages/DriverRegistration";
 import LogisticsDashboard from "./pages/LogisticsDashboard";
 import Contact from "./pages/Contact";
+import ProjectPlanner from "./pages/ProjectPlanner";
+import ProductComparison from "./pages/ProductComparison";
+import FundiAI from "@/components/FundiAI";
 
 const queryClient = new QueryClient();
 
@@ -63,6 +67,7 @@ const AppContent = () => {
             <BrowserRouter>
               <Routes>
                 <Route path="/" element={<Index />} />
+                <Route path="/how-it-works" element={<HowItWorks />} />
                 <Route path="/products" element={<Products />} />
                 <Route path="/product/:id" element={<ProductDetail />} />
                 <Route path="/search" element={<SearchResults />} />
@@ -91,9 +96,12 @@ const AppContent = () => {
                 <Route path="/shipping" element={<Shipping />} />
                 <Route path="/returns" element={<Returns />} />
                 <Route path="/contact" element={<Contact />} />
+                <Route path="/planner" element={<ProjectPlanner />} />
+                <Route path="/compare" element={<ProductComparison />} />
                 {/* Catch-all */}
                 <Route path="*" element={<NotFound />} />
               </Routes>
+              <FundiAI />
             </BrowserRouter>
           </TooltipProvider>
         </AuthProvider>

@@ -101,6 +101,7 @@ const Footer = () => {
           <div>
             <h4 className="font-semibold text-lg mb-6">Quick Links</h4>
             <ul className="space-y-3">
+              <li><Link to="/how-it-works" className="text-background/70 hover:text-primary transition-colors">How FundiMart Works</Link></li>
               <li><Link to="/about" className="text-background/70 hover:text-primary transition-colors">About Us</Link></li>
               <li><Link to={user?.role === 'seller' ? "/seller/dashboard" : "/seller/login"} className="text-background/70 hover:text-primary transition-colors">Hardware Seller Portal</Link></li>
               <li><Link to="/blog" className="text-background/70 hover:text-primary transition-colors">Blog & Resources</Link></li>

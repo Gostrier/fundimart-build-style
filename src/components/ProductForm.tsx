@@ -38,6 +38,8 @@ export const ProductForm = ({ initialData, onSubmit, isLoading = false }: Produc
     quality: initialData?.quality || "",
     description: initialData?.description || "",
     photos: initialData?.photos || [],
+    sellerContact: initialData?.sellerContact || "",
+    warehouseLocation: initialData?.warehouseLocation || "",
   });
 
   const handlePhotoChange = (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -162,6 +164,30 @@ export const ProductForm = ({ initialData, onSubmit, isLoading = false }: Produc
           value={formData.quality}
           onChange={(e) => setFormData({ ...formData, quality: e.target.value })}
         />
+      </div>
+
+      {/* Seller & Warehouse Info */}
+      <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+        <div className="space-y-2">
+          <Label htmlFor="sellerContact" className="text-base font-medium">Seller Contact Number</Label>
+          <Input
+            id="sellerContact"
+            type="tel"
+            placeholder="e.g., +254 7XX XXX XXX"
+            value={formData.sellerContact}
+            onChange={(e) => setFormData({ ...formData, sellerContact: e.target.value })}
+          />
+        </div>
+        <div className="space-y-2">
+          <Label htmlFor="warehouseLocation" className="text-base font-medium">Warehouse/Pickup Location</Label>
+          <Input
+            id="warehouseLocation"
+            type="text"
+            placeholder="e.g., Industrial Area, Nairobi"
+            value={formData.warehouseLocation}
+            onChange={(e) => setFormData({ ...formData, warehouseLocation: e.target.value })}
+          />
+        </div>
       </div>
 
       {/* Description */}

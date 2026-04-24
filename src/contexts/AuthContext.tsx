@@ -130,6 +130,7 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
         hardwareName,
         location,
         firmEmail,
+        isVerified: false,
         createdAt: Date.now(),
       };
 

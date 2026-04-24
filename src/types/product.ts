@@ -4,6 +4,7 @@ export interface Seller {
   hardwareName: string;
   location: string;
   firmEmail: string;
+  isVerified?: boolean;
   createdAt: number;
 }
 
@@ -29,6 +30,8 @@ export interface Product {
   photos: string[];
   sellerId: string;
   sellerName: string;
+  sellerContact?: string;
+  warehouseLocation?: string;
   status: string;
   createdAt: number;
   updatedAt: number;

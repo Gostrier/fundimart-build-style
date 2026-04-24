@@ -39,8 +39,14 @@ const Category = () => {
     let displayProducts = [...filteredStatic];
     try {
       const storedProducts = JSON.parse(localStorage.getItem("fundimart_products") || "[]");
+      const allUsers = JSON.parse(localStorage.getItem("fundimart_users") || "[]");
+      
       const filteredStored = storedProducts
-        .filter((p: Product) => normalize(p.category) === slug || normalize(p.category) === categorySlug)
+        .filter((p: Product) => {
+          const seller = allUsers.find((u: any) => u.id === p.sellerId)?.seller;
+          const matchesCategory = normalize(p.category) === slug || normalize(p.category) === categorySlug;
+          return matchesCategory && seller?.isVerified;
+        })
         .map((p: Product) => ({
           id: p.id,
           image: p.photos[0] || "https://via.placeholder.com/300x300?text=" + encodeURIComponent(p.name),

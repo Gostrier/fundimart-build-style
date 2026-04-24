@@ -1,12 +1,13 @@
 import { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
-import { BarChart3, Package, ShoppingCart, Settings, AlertTriangle } from 'lucide-react';
+import { BarChart3, Package, ShoppingCart, Settings, AlertTriangle, Users } from 'lucide-react';
 import AdminLayout from '@/components/admin/AdminLayout';
 import AdminProducts from '@/components/admin/AdminProducts';
 import AdminOrders from '@/components/admin/AdminOrders';
 import AdminAnalytics from '@/components/admin/AdminAnalytics';
 import AdminSettings from '@/components/admin/AdminSettings';
+import AdminSellers from '@/components/admin/AdminSellers';
 
 export default function AdminDashboard() {
   const navigate = useNavigate();
@@ -67,7 +68,7 @@ export default function AdminDashboard() {
 
             {/* Tabs Navigation */}
             <Tabs value={activeTab} onValueChange={setActiveTab} className="w-full">
-              <TabsList className="grid w-full grid-cols-4 mb-6 bg-amber-800 border border-amber-700 p-1 rounded-lg">
+              <TabsList className="grid w-full grid-cols-5 mb-6 bg-amber-800 border border-amber-700 p-1 rounded-lg">
                 <TabsTrigger value="analytics" className="flex items-center gap-2">
                   <BarChart3 className="w-4 h-4" />
                   <span className="hidden sm:inline">Analytics</span>
@@ -75,6 +76,10 @@ export default function AdminDashboard() {
                 <TabsTrigger value="products" className="flex items-center gap-2">
                   <Package className="w-4 h-4" />
                   <span className="hidden sm:inline">Products</span>
+                </TabsTrigger>
+                <TabsTrigger value="sellers" className="flex items-center gap-2">
+                  <Users className="w-4 h-4" />
+                  <span className="hidden sm:inline">Sellers</span>
                 </TabsTrigger>
                 <TabsTrigger value="orders" className="flex items-center gap-2">
                   <ShoppingCart className="w-4 h-4" />
@@ -93,6 +98,10 @@ export default function AdminDashboard() {
 
               <TabsContent value="products" className="mt-6">
                 <AdminProducts />
+              </TabsContent>
+
+              <TabsContent value="sellers" className="mt-6">
+                <AdminSellers />
               </TabsContent>
 
               <TabsContent value="orders" className="mt-6">

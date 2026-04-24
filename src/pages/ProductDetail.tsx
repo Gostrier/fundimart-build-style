@@ -36,6 +36,8 @@ const ProductDetail = () => {
       badge: p.quality ? p.quality : undefined,
       sellerName: p.sellerName,
       sellerId: p.sellerId,
+      sellerContact: p.sellerContact,
+      warehouseLocation: p.warehouseLocation,
       category: p.category,
       description: p.description
     }));
@@ -162,10 +164,20 @@ const ProductDetail = () => {
                   </span>
                 )}
               </div>
-              <div className="mt-2">
+              <div className="mt-2 space-y-2">
                 <p className="text-sm text-muted-foreground">
                   Seller: <span className="text-foreground font-semibold">{product.sellerName}</span>
                 </p>
+                {product.sellerContact && (
+                  <p className="text-sm text-muted-foreground">
+                    Contact: <span className="text-foreground font-semibold">{product.sellerContact}</span>
+                  </p>
+                )}
+                {product.warehouseLocation && (
+                  <p className="text-sm text-muted-foreground">
+                    Warehouse: <span className="text-foreground font-semibold">{product.warehouseLocation}</span>
+                  </p>
+                )}
               </div>
             </div>
 
