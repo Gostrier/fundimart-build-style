@@ -32,10 +32,6 @@ const Header = () => {
         <div className="hidden md:flex items-center justify-between py-2 text-xs font-medium border-b border-border/50">
           <div className="flex items-center gap-6">
             <span className="text-muted-foreground flex items-center gap-1">
-              <PhoneCall className="w-3 h-3 text-accent" />
-              Support: +254 (0) XXX XXX XXX
-            </span>
-            <span className="text-muted-foreground flex items-center gap-1">
               <ShoppingBag className="w-3 h-3 text-primary" />
               Free Delivery on Bulk Orders
             </span>
@@ -70,10 +66,10 @@ const Header = () => {
                 <img
                 src={fundimartLogo}
                 alt="FundiMart Logo"
-                className="h-10 w-auto rounded-lg relative border border-white/50"
+                className="h-12 md:h-16 w-auto rounded-lg relative border border-white/50"
                 />
             </div>
-            <span className="text-2xl font-black text-foreground tracking-tighter">
+            <span className="text-3xl md:text-4xl font-black text-foreground tracking-tighter">
               Fundi<span className="text-accent">Mart</span>
             </span>
           </Link>
