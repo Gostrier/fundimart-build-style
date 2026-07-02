@@ -4,10 +4,6 @@ import { Input } from "@/components/ui/input";
 import { Card, CardHeader, CardContent, CardFooter } from "@/components/ui/card";
 import { ScrollArea } from "@/components/ui/scroll-area";
 import { MessageSquare, Send, X, Bot, User, Loader2 } from "lucide-react";
-import { GoogleGenerativeAI } from "@google/generative-ai";
-
-const API_KEY = import.meta.env.VITE_GEMINI_API_KEY;
-const genAI = new GoogleGenerativeAI(API_KEY || "");
 
 const SYSTEM_PROMPT = `You are Fundi-AI, the helpful assistant for FundiMart.
 FundiMart is a leading construction materials marketplace in Kenya.
@@ -47,41 +43,20 @@ export default function FundiAI() {
 
   const handleSend = async () => {
     if (!input.trim() || isLoading) return;
-    
-    if (!API_KEY) {
-        setMessages(prev => [...prev, { role: 'bot', text: "Error: Gemini API Key not found. Please add VITE_GEMINI_API_KEY to your .env file." }]);
-        setInput('');
-        return;
-    }
 
     const userMessage = input.trim();
     setMessages(prev => [...prev, { role: 'user', text: userMessage }]);
     setInput('');
     setIsLoading(true);
 
-    try {
-      const model = genAI.getGenerativeModel({ 
-        model: "gemini-1.5-flash",
-        systemInstruction: SYSTEM_PROMPT
-      });
-      
-      const chat = model.startChat({
-        history: messages.slice(1).map(m => ({
-          role: m.role === 'user' ? 'user' : 'model',
-          parts: [{ text: m.text }],
-        })),
-      });
-
-      const result = await chat.sendMessage(userMessage);
-      const response = await result.response;
-      const text = response.text();
-      setMessages(prev => [...prev, { role: 'bot', text }]);
-    } catch (error) {
-      console.error("Error calling Gemini API:", error);
-      setMessages(prev => [...prev, { role: 'bot', text: "Sorry, I'm having trouble connecting right now. Please try again later." }]);
-    } finally {
+    // Simulate API call delay
+    setTimeout(() => {
+      setMessages(prev => [...prev, { 
+        role: 'bot', 
+        text: "Thank you for your message! I am currently in demo mode. For real-time assistance, please contact our support team at info@fundimart.co.ke or call +254 (0) XXX XXX XXX." 
+      }]);
       setIsLoading(false);
-    }
+    }, 1500);
   };
 
   return (
