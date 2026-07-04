@@ -214,7 +214,7 @@ export default function AdminProducts() {
         <DialogContent className="fixed left-[50%] top-[50%] z-50 max-w-2xl w-full max-h-[85vh] translate-x-[-50%] translate-y-[-50%] overflow-y-auto bg-slate-900 border-slate-700 text-white p-6 shadow-lg duration-200">
           <DialogHeader>
             <DialogTitle>Edit Product</DialogTitle>
-            <DialogDescription className="text-slate-400">
+            <DialogDescription className="text-slate-9500">
               Update the details for this product.
             </DialogDescription>
           </DialogHeader>
