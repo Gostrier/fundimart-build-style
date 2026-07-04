@@ -11,7 +11,7 @@ import {
 } from '@/components/ui/table';
 import { Dialog, DialogContent, DialogDescription, DialogHeader, DialogTitle } from "@/components/ui/dialog";
 import { ProductForm } from '@/components/ProductForm';
-import { Edit2, Trash2, Plus, Lock } from 'lucide-react';
+import { Edit2, Trash2, Plus } from 'lucide-react';
 import { Product } from '@/types/product';
 import { toast } from 'sonner';
 import { products as staticProducts } from '@/data/products';
@@ -198,7 +198,7 @@ export default function AdminProducts() {
 
       {/* Add Product Dialog */}
       <Dialog open={showAddModal} onOpenChange={setShowAddModal}>
-        <DialogContent className="max-w-2xl max-h-[90vh] overflow-y-auto bg-slate-900 border-slate-700 text-white">
+        <DialogContent className="fixed left-[50%] top-[50%] z-50 max-w-2xl w-full max-h-[85vh] translate-x-[-50%] translate-y-[-50%] overflow-y-auto bg-slate-900 border-slate-700 text-white p-6 shadow-lg duration-200">
           <DialogHeader>
             <DialogTitle>Add New Product (Admin)</DialogTitle>
             <DialogDescription className="text-slate-400">
@@ -211,7 +211,7 @@ export default function AdminProducts() {
 
       {/* Edit Product Dialog */}
       <Dialog open={!!editingProduct} onOpenChange={() => setEditingProduct(null)}>
-        <DialogContent className="max-w-2xl max-h-[90vh] overflow-y-auto bg-slate-900 border-slate-700 text-white">
+        <DialogContent className="fixed left-[50%] top-[50%] z-50 max-w-2xl w-full max-h-[85vh] translate-x-[-50%] translate-y-[-50%] overflow-y-auto bg-slate-900 border-slate-700 text-white p-6 shadow-lg duration-200">
           <DialogHeader>
             <DialogTitle>Edit Product</DialogTitle>
             <DialogDescription className="text-slate-400">
