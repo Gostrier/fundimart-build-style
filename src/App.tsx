@@ -13,7 +13,7 @@ import Products from "./pages/Products";
 import ProductDetail from "./pages/ProductDetail";
 import SearchResults from "./pages/SearchResults";
 import NotFound from "./pages/NotFound";
-import SiteLogoBadge from "@/components/SiteLogoBadge"; // Import the new component
+import SiteLogoBadge from "@/components/SiteLogoBadge";
 import BoardPresentation from "./pages/BoardPresentation";
 import Auth from "./pages/Auth";
 import SellerLogin from "./pages/SellerLogin";
@@ -39,7 +39,7 @@ import Contact from "./pages/Contact";
 import ProjectPlanner from "./pages/ProjectPlanner";
 import ProductComparison from "./pages/ProductComparison";
 import FundiAI from "@/components/FundiAI";
-
+import PaymentCallback from "./pages/PaymentCallback";
 const queryClient = new QueryClient();
 
 const AppContent = () => {
@@ -98,6 +98,7 @@ const AppContent = () => {
                 <Route path="/contact" element={<Contact />} />
                 <Route path="/planner" element={<ProjectPlanner />} />
                 <Route path="/compare" element={<ProductComparison />} />
+                <Route path="/payment/callback" element={<PaymentCallback />} />
                 {/* Catch-all */}
                 <Route path="*" element={<NotFound />} />
               </Routes>
