@@ -40,6 +40,7 @@ import ProjectPlanner from "./pages/ProjectPlanner";
 import ProductComparison from "./pages/ProductComparison";
 import FundiAI from "@/components/FundiAI";
 import PaymentCallback from "./pages/PaymentCallback";
+import ScrollToTop from "./components/ScrollToTop";
 const queryClient = new QueryClient();
 
 const AppContent = () => {
@@ -66,6 +67,7 @@ const AppContent = () => {
             <Sonner />
             <BrowserRouter>
               <Routes>
+                <ScrollToTop />
                 <Route path="/" element={<Index />} />
                 <Route path="/how-it-works" element={<HowItWorks />} />
                 <Route path="/products" element={<Products />} />
