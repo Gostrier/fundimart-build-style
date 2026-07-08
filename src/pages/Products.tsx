@@ -1,8 +1,6 @@
-// src/pages/Products.tsx
 import { useState, useEffect } from "react";
 import Header from "@/components/Header";
 import Footer from "@/components/Footer";
-import { products as staticProducts } from "@/data/products";
 import ProductCard from "@/components/ProductCard";
 import { Product } from "@/types/product";
 
@@ -10,22 +8,7 @@ const Products = () => {
   const [allProducts, setAllProducts] = useState<any[]>([]);
 
   useEffect(() => {
-    // 1. Format static products to match ProductCardProps
-    const formattedStatic = staticProducts.map(p => ({
-      id: p.id,
-      image: p.image,
-      name: p.name,
-      price: p.price,
-      originalPrice: p.originalPrice,
-      rating: p.rating || 4.5,
-      reviews: p.reviews || 10,
-      badge: p.badge,
-      sellerId: "static-seller",
-      category: p.category
-    }));
-
-    // 2. Load and merge seller/admin products from localStorage
-    let displayProducts = [...formattedStatic];
+    let displayProducts = [];
     try {
       const storedProducts = JSON.parse(localStorage.getItem("fundimart_products") || "[]");
       const allUsers = JSON.parse(localStorage.getItem("fundimart_users") || "[]");
@@ -37,19 +20,19 @@ const Products = () => {
           return seller?.isVerified;
         })
         .map((p: Product) => ({
-        id: p.id,
-        image: p.photos[0] || "https://via.placeholder.com/300x300?text=" + encodeURIComponent(p.name),
-        name: p.name,
-        price: p.price,
-        rating: 4.5,
-        reviews: 12,
-        badge: p.quality ? p.quality : undefined,
-        sellerId: p.sellerId,
-        category: p.category,
-      }));
+          id: p.id,
+          image: p.photos?.[0] || "https://via.placeholder.com/300x300?text=" + encodeURIComponent(p.name),
+          name: p.name,
+          price: p.price,
+          rating: p.rating || 4.5,
+          reviews: p.reviews || 0,
+          badge: p.quality ? p.quality : undefined,
+          sellerId: p.sellerId,
+          category: p.category,
+        }));
       
-      // Combine them, putting new products first
-      displayProducts = [...formattedStored, ...formattedStatic];
+      // Only display what was actually uploaded by sellers
+      displayProducts = [...formattedStored];
     } catch (error) {
       console.error("Error loading stored products:", error);
     }
