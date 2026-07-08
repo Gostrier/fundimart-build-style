@@ -235,3 +235,12 @@ const ProductDetail = () => {
                 <ProductCard key={p.id} {...p} />
               ))}
             </div>
+          </section>
+        )}
+      </main>
+      <Footer />
+    </div>
+  );
+};
+
+export default ProductDetail;
