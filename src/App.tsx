@@ -66,8 +66,8 @@ const AppContent = () => {
             <Toaster />
             <Sonner />
             <BrowserRouter>
+            <ScrollToTop />
               <Routes>
-                <ScrollToTop />
                 <Route path="/" element={<Index />} />
                 <Route path="/how-it-works" element={<HowItWorks />} />
                 <Route path="/products" element={<Products />} />

@@ -33,7 +33,7 @@ const Header = () => {
           <div className="flex items-center gap-6">
             <span className="text-muted-foreground flex items-center gap-1">
               <ShoppingBag className="w-3 h-3 text-primary" />
-              Free Delivery on Bulk Orders
+             ENJOY YOUR SHOPPING EXPERIENCE WITH FUNDIMART!
             </span>
           </div>
           <div className="flex items-center gap-4">
