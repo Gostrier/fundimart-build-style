@@ -1,7 +1,6 @@
 import { Toaster } from "@/components/ui/toaster";
 import { Toaster as Sonner } from "@/components/ui/sonner";
 import { TooltipProvider } from "@/components/ui/tooltip";
-import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { BrowserRouter, Routes, Route } from "react-router-dom";
 import { ThemeProvider } from "next-themes";
 import { CartProvider } from "@/contexts/CartContext";
@@ -14,7 +13,6 @@ import ProductDetail from "./pages/ProductDetail";
 import SearchResults from "./pages/SearchResults";
 import NotFound from "./pages/NotFound";
 import SiteLogoBadge from "@/components/SiteLogoBadge";
-import BoardPresentation from "./pages/BoardPresentation";
 import Auth from "./pages/Auth";
 import SellerLogin from "./pages/SellerLogin";
 import Logout from "./pages/Logout";
@@ -41,8 +39,10 @@ import ProductComparison from "./pages/ProductComparison";
 import FundiAI from "@/components/FundiAI";
 import PaymentCallback from "./pages/PaymentCallback";
 import ScrollToTop from "./components/ScrollToTop";
+import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
 const queryClient = new QueryClient();
 
+const API_URL = "https://jengamart-0.onrender.com";
 const AppContent = () => {
   useEffect(() => {
     const handleThemeChange = (e: any) => {
@@ -77,7 +77,6 @@ const AppContent = () => {
                 <Route path="/seller/login" element={<SellerLogin />} />
                 <Route path="/logout" element={<Logout />} />
                 <Route path="/category/:slug" element={<Category />} />
-                <Route path="/board-presentation" element={<BoardPresentation />} />
                 <Route path="/seller/dashboard" element={<SellerDashboard />} />
                 <Route path="/admin/login" element={<AdminLogin />} />
                 <Route path="/admin/dashboard" element={<AdminDashboard />} />
