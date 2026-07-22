@@ -2,7 +2,6 @@ import { useState, useEffect } from "react";
 import ProductCard from "./ProductCard";
 import { Button } from "@/components/ui/button";
 import { ArrowRight } from "lucide-react";
-import { products as staticProducts } from "@/data/products";
 import { Product } from "@/types/product";
 import { useNavigate } from "react-router-dom";
 
@@ -11,20 +10,8 @@ const FeaturedProducts = () => {
   const navigate = useNavigate();
 
   useEffect(() => {
-    // 1. Format static products
-    const formattedStatic = staticProducts.map(p => ({
-      id: p.id,
-      image: p.image,
-      name: p.name,
-      price: p.price,
-      rating: p.rating || 4.5,
-      reviews: p.reviews || 10,
-      badge: p.badge,
-      sellerId: "static-seller"
-    }));
-
-    // 2. Load and merge seller/admin products from localStorage
-    let displayProducts = [...formattedStatic];
+    // Hardcoded static references removed to transition to live seller postings only
+    let displayProducts = [];
     try {
       const storedProducts = JSON.parse(localStorage.getItem("fundimart_products") || "[]");
       const allUsers = JSON.parse(localStorage.getItem("fundimart_users") || "[]");
@@ -36,7 +23,7 @@ const FeaturedProducts = () => {
         })
         .map((p: Product) => ({
           id: p.id,
-          image: p.photos[0] || "https://via.placeholder.com/300x300?text=" + encodeURIComponent(p.name),
+          image: p.photos?.[0] || "https://via.placeholder.com/300x300?text=" + encodeURIComponent(p.name),
           name: p.name,
           price: p.price,
           rating: 4.5,
@@ -45,8 +32,7 @@ const FeaturedProducts = () => {
           sellerId: p.sellerId,
         }));
       
-      // Combine them, putting new products first
-      displayProducts = [...formattedStored, ...formattedStatic];
+      displayProducts = [...formattedStored];
     } catch (error) {
       console.error("Error loading stored products:", error);
     }

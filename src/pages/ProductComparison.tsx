@@ -1,19 +1,49 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import Header from "@/components/Header";
 import Footer from "@/components/Footer";
 import { Card, CardHeader, CardTitle, CardContent } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
-import { products } from "@/data/products";
 import { Star, ShieldCheck, Truck, Scale, X, ShoppingCart } from "lucide-react";
 import { useCart } from "@/contexts/CartContext";
 import { toast } from "sonner";
+import { Product } from "@/types/product";
 
 export default function ProductComparison() {
   const [selectedIds, setSelectedIds] = useState<string[]>([]);
+  const [allProducts, setAllProducts] = useState<any[]>([]);
   const { addToCart } = useCart();
 
-  const selectedProducts = selectedIds.map(id => products.find(p => p.id === id)).filter(Boolean);
+  useEffect(() => {
+    let dynamicProducts = [];
+    try {
+      const storedProducts = JSON.parse(localStorage.getItem("fundimart_products") || "[]");
+      const allUsers = JSON.parse(localStorage.getItem("fundimart_users") || "[]");
+
+      dynamicProducts = storedProducts
+        .filter((p: Product) => {
+          const seller = allUsers.find((u: any) => u.id === p.sellerId)?.seller;
+          return seller?.isVerified;
+        })
+        .map((p: Product) => ({
+          id: p.id,
+          image: p.photos?.[0] || "https://via.placeholder.com/300x300?text=" + encodeURIComponent(p.name),
+          name: p.name,
+          price: p.price,
+          rating: p.rating || 4.5,
+          reviews: p.reviews || 0,
+          badge: p.quality ? p.quality : undefined,
+          sellerId: p.sellerId,
+          category: p.category,
+          description: p.description
+        }));
+    } catch (error) {
+      console.error("Error loading products for comparison:", error);
+    }
+    setAllProducts(dynamicProducts);
+  }, []);
+
+  const selectedProducts = selectedIds.map(id => allProducts.find(p => p.id === id)).filter(Boolean);
 
   const addProduct = (id: string) => {
     if (selectedIds.length >= 4) {
@@ -37,7 +67,7 @@ export default function ProductComparison() {
       name: product.name,
       price: product.price,
       image: product.image,
-      sellerId: "static-seller"
+      sellerId: product.sellerId
     });
     toast.success(`${product.name} added to cart`);
   };
@@ -63,7 +93,7 @@ export default function ProductComparison() {
                 <SelectValue placeholder="Add a product to compare..." />
               </SelectTrigger>
               <SelectContent>
-                {products.filter(p => !selectedIds.includes(p.id)).map(p => (
+                {allProducts.filter(p => !selectedIds.includes(p.id)).map(p => (
                   <SelectItem key={p.id} value={p.id}>{p.name} (KES {p.price.toLocaleString()})</SelectItem>
                 ))}
               </SelectContent>
@@ -131,7 +161,7 @@ export default function ProductComparison() {
                   <div className="pt-4 border-t">
                     <h4 className="text-xs font-bold uppercase text-muted-foreground mb-2 tracking-wider">Description</h4>
                     <p className="text-xs text-muted-foreground line-clamp-3 leading-relaxed">
-                      {product.description || "High-quality material suitable for both residential and commercial projects. Meets international standards."}
+                      {product.description || "High-quality material suitable for projects. Meets standard requirements."}
                     </p>
                   </div>
 
@@ -146,27 +176,27 @@ export default function ProductComparison() {
 
         {/* Feature Highlights */}
         <div className="mt-20 grid grid-cols-1 md:grid-cols-3 gap-8">
-            <div className="flex flex-col items-center text-center p-6 bg-card rounded-2xl border">
-                <div className="w-12 h-12 rounded-xl bg-primary/10 text-primary flex items-center justify-center mb-4">
-                    <Scale className="w-6 h-6" />
-                </div>
-                <h3 className="font-bold text-lg mb-2">Smart Decisions</h3>
-                <p className="text-sm text-muted-foreground">Compare technical specifications side-by-side to choose the best material for your project.</p>
+          <div className="flex flex-col items-center text-center p-6 bg-card rounded-2xl border">
+            <div className="w-12 h-12 rounded-xl bg-primary/10 text-primary flex items-center justify-center mb-4">
+              <Scale className="w-6 h-6" />
             </div>
-            <div className="flex flex-col items-center text-center p-6 bg-card rounded-2xl border">
-                <div className="w-12 h-12 rounded-xl bg-primary/10 text-primary flex items-center justify-center mb-4">
-                    <ShieldCheck className="w-6 h-6" />
-                </div>
-                <h3 className="font-bold text-lg mb-2">Quality Comparison</h3>
-                <p className="text-sm text-muted-foreground">We verify all sellers, but you can still compare different brands and quality tiers.</p>
+            <h3 className="font-bold text-lg mb-2">Smart Decisions</h3>
+            <p className="text-sm text-muted-foreground">Compare technical specifications side-by-side to choose the best material for your project.</p>
+          </div>
+          <div className="flex flex-col items-center text-center p-6 bg-card rounded-2xl border">
+            <div className="w-12 h-12 rounded-xl bg-primary/10 text-primary flex items-center justify-center mb-4">
+              <ShieldCheck className="w-6 h-6" />
             </div>
-            <div className="flex flex-col items-center text-center p-6 bg-card rounded-2xl border">
-                <div className="w-12 h-12 rounded-xl bg-primary/10 text-primary flex items-center justify-center mb-4">
-                    <Truck className="w-6 h-6" />
-                </div>
-                <h3 className="font-bold text-lg mb-2">Logistics Savings</h3>
-                <p className="text-sm text-muted-foreground">Compare prices from different sellers to find the most cost-effective solution including delivery.</p>
+            <h3 className="font-bold text-lg mb-2">Quality Comparison</h3>
+            <p className="text-sm text-muted-foreground">We verify all sellers, but you can still compare different brands and quality tiers.</p>
+          </div>
+          <div className="flex flex-col items-center text-center p-6 bg-card rounded-2xl border">
+            <div className="w-12 h-12 rounded-xl bg-primary/10 text-primary flex items-center justify-center mb-4">
+              <Truck className="w-6 h-6" />
             </div>
+            <h3 className="font-bold text-lg mb-2">Logistics Savings</h3>
+            <p className="text-sm text-muted-foreground">Compare prices from different sellers to find the most cost-effective solution including delivery.</p>
+          </div>
         </div>
       </main>
       <Footer />

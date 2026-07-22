@@ -3,7 +3,7 @@ import { useParams, Link } from "react-router-dom";
 import Header from "@/components/Header";
 import Footer from "@/components/Footer";
 import ProductCard from "@/components/ProductCard";
-import { products as staticProducts, categories } from "@/data/products";
+import { categories } from "@/data/products";
 import { ArrowLeft } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Product } from "@/types/product";
@@ -20,23 +20,7 @@ const Category = () => {
     const normalize = (s: string) => s.toLowerCase().replace(/\s+/g, '-').replace(/[^a-z0-9-]/g, '');
     const categorySlug = normalize(category.name);
 
-    // 1. Get static products for this category
-    const filteredStatic = staticProducts
-      .filter((p) => normalize(p.category) === slug || normalize(p.category) === categorySlug)
-      .map(p => ({
-        id: p.id,
-        image: p.image,
-        name: p.name,
-        price: p.price,
-        originalPrice: p.originalPrice,
-        rating: p.rating || 4.5,
-        reviews: p.reviews || 10,
-        badge: p.badge,
-        sellerId: "static-seller"
-      }));
-
-    // 2. Get dynamic products from localStorage for this category
-    let displayProducts = [...filteredStatic];
+    let displayProducts = [];
     try {
       const storedProducts = JSON.parse(localStorage.getItem("fundimart_products") || "[]");
       const allUsers = JSON.parse(localStorage.getItem("fundimart_users") || "[]");
@@ -49,7 +33,7 @@ const Category = () => {
         })
         .map((p: Product) => ({
           id: p.id,
-          image: p.photos[0] || "https://via.placeholder.com/300x300?text=" + encodeURIComponent(p.name),
+          image: p.photos?.[0] || "https://via.placeholder.com/300x300?text=" + encodeURIComponent(p.name),
           name: p.name,
           price: p.price,
           rating: 4.5,
@@ -58,7 +42,7 @@ const Category = () => {
           sellerId: p.sellerId,
         }));
       
-      displayProducts = [...filteredStored, ...filteredStatic];
+      displayProducts = [...filteredStored];
     } catch (error) {
       console.error("Error loading stored products:", error);
     }

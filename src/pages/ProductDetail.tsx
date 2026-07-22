@@ -1,5 +1,4 @@
 import { useParams, useNavigate } from "react-router-dom";
-import { products as staticProducts } from "@/data/products";
 import Header from "@/components/Header";
 import Footer from "@/components/Footer";
 import { Star, ShoppingCart, Heart, ArrowLeft, ShieldCheck, Truck, RefreshCw } from "lucide-react";
@@ -24,17 +23,17 @@ const ProductDetail = () => {
   useEffect(() => {
     window.scrollTo(0, 0);
     
-    // Load all products (static + dynamic)
+    // Only load authentic items from dynamic inventory configurations
     const storedProducts = JSON.parse(localStorage.getItem("fundimart_products") || "[]");
     const formattedStored = storedProducts.map((p: Product) => ({
       id: p.id,
-      image: p.photos[0] || "https://via.placeholder.com/300x300?text=" + encodeURIComponent(p.name),
+      image: p.photos?.[0] || "https://via.placeholder.com/300x300?text=" + encodeURIComponent(p.name),
       name: p.name,
       price: p.price,
-      rating: 4.5,
-      reviews: 12,
+      rating: p.rating || 4.5,
+      reviews: p.reviews || 0,
       badge: p.quality ? p.quality : undefined,
-      sellerName: p.sellerName,
+      sellerName: p.sellerName || "Verified Seller",
       sellerId: p.sellerId,
       sellerContact: p.sellerContact,
       warehouseLocation: p.warehouseLocation,
@@ -42,18 +41,10 @@ const ProductDetail = () => {
       description: p.description
     }));
 
-    const formattedStatic = staticProducts.map(p => ({
-      ...p,
-      sellerId: "static-seller",
-      sellerName: "Fundimart"
-    }));
+    setAllProducts(formattedStored);
 
-    const combined = [...formattedStored, ...formattedStatic];
-    setAllProducts(combined);
-
-    const found = combined.find((p) => p.id === id);
+    const found = formattedStored.find((p: any) => p.id === id);
     
-    // Calculate real ratings from reviews
     if (found) {
       const allReviews = JSON.parse(localStorage.getItem("fundimart_reviews") || "[]");
       const productReviews = allReviews.filter((r: any) => r.productId === found.id);
@@ -118,7 +109,6 @@ const ProductDetail = () => {
         </button>
 
         <div className="grid grid-cols-1 md:grid-cols-2 gap-8 lg:gap-12 mb-16">
-          {/* Product Image */}
           <div className="bg-muted rounded-2xl overflow-hidden aspect-square relative group">
             {product.badge && (
               <span className="absolute top-4 left-4 z-10 px-3 py-1 bg-accent text-accent-foreground text-xs font-bold rounded-full">
@@ -132,7 +122,6 @@ const ProductDetail = () => {
             />
           </div>
 
-          {/* Product Info */}
           <div className="flex flex-col">
             <div className="mb-6">
               <h1 className="text-2xl md:text-3xl lg:text-4xl font-bold text-foreground mb-4">
@@ -204,7 +193,6 @@ const ProductDetail = () => {
               </Button>
             </div>
 
-            {/* Features/Trust badges */}
             <div className="grid grid-cols-1 sm:grid-cols-3 gap-4 border-t border-border pt-8">
               <div className="flex items-center gap-3">
                 <div className="w-10 h-10 rounded-full bg-primary/10 flex items-center justify-center text-primary">
@@ -239,7 +227,6 @@ const ProductDetail = () => {
 
         <ProductReviews productId={product.id} />
 
-        {/* Recommended Products */}
         {recommendedProducts.length > 0 && (
           <section className="mt-16">
             <h2 className="text-2xl font-bold mb-8">Recommended Products</h2>

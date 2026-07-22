@@ -41,16 +41,40 @@ const SellerDashboard = () => {
     }
   }, [isSeller, navigate]);
 
-  // Load products and calculate stats from localStorage
-  useEffect(() => {
-    if (user?.id) {
+  // Retrieve Authentication Token (adjust depending on how your AuthContext stores JWT tokens)
+  const getAuthToken = () => {
+    return localStorage.getItem("token") || ""; 
+  };
+
+  // 1. Load products from backend (with LocalStorage backup)
+  const fetchSellerProducts = async () => {
+    if (!user?.id) return;
+    try {
+      // Fetch all products from your live API
+      const response = await fetch("http://localhost:5000/api/products?limit=100");
+      if (!response.ok) throw new Error("Failed to load DB products");
+      const result = await response.json();
+      
+      const dbProducts = result.data || [];
+      // If we got DB products, display them
+      setProducts(dbProducts);
+      setStats(prev => ({ ...prev, activeListings: dbProducts.length, outOfStock: dbProducts.filter((p: any) => p.stock === 0).length }));
+    } catch (error) {
+      console.warn("Backend products offline, loading from localstorage fallback:", error);
+      // Fallback
       const allProducts = JSON.parse(localStorage.getItem("fundimart_products") || "[]");
       const sellerProducts = allProducts.filter((p: Product) => p.sellerId === user.id);
       setProducts(sellerProducts);
-      
+      setStats(prev => ({ ...prev, activeListings: sellerProducts.length, outOfStock: sellerProducts.filter((p: Product) => p.stock === 0).length }));
+    }
+  };
+
+  useEffect(() => {
+    fetchSellerProducts();
+
+    // Calculate other local order stats from localStorage
+    if (user?.id) {
       const allOrders = JSON.parse(localStorage.getItem("fundimart_orders") || "[]");
-      
-      // Calculate seller specific stats from orders
       let sellerRevenue = 0;
       let sellerSalesCount = 0;
       const sellerOrderItems: any[] = [];
@@ -72,30 +96,57 @@ const SellerDashboard = () => {
         });
       });
       
-      // Calculate Commission (e.g., 5%)
       const commissionRate = 0.05;
       const commission = sellerRevenue * commissionRate;
       const balance = sellerRevenue - commission;
 
-      setStats({
+      setStats(prev => ({
+        ...prev,
         totalSales: sellerSalesCount,
         totalRevenue: sellerRevenue,
-        activeListings: sellerProducts.length,
-        outOfStock: sellerProducts.filter((p: Product) => p.stock === 0).length,
         walletBalance: balance,
         commissionPaid: commission
-      });
+      }));
       
       setRecentSales(sellerOrderItems.sort((a, b) => b.date - a.date).slice(0, 5));
     }
   }, [user]);
 
+  // 2. Handle Add Product to Database
   const handleAddProduct = async (data: Omit<Product, 'id' | 'createdAt' | 'updatedAt'>) => {
     setIsLoading(true);
     try {
-      const newProduct: Product = {
+      const token = getAuthToken();
+
+      // Make API request to save in PostgreSQL
+      const response = await fetch("http://localhost:5000/api/products", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+          "Authorization": `Bearer ${token}`
+        },
+        body: JSON.stringify({
+          name: data.name,
+          price: data.price,
+          unit: data.unit,
+          stock: data.stock,
+          category: data.category || "general",
+          description: data.description || ""
+        })
+      });
+
+      if (!response.ok) {
+        const errData = await response.json();
+        throw new Error(errData.message || "Failed to add product to database");
+      }
+
+      const resData = await response.json();
+      const dbProduct = resData.product;
+
+      // Also update local storage so older modules don't break
+      const newLocalProduct: Product = {
         ...data,
-        id: `product_${Date.now()}`,
+        id: dbProduct.id,
         sellerId: user?.id || "",
         sellerName: user?.seller?.hardwareName || `${user?.firstName} ${user?.lastName}`,
         createdAt: Date.now(),
@@ -104,32 +155,49 @@ const SellerDashboard = () => {
       };
 
       const allProducts = JSON.parse(localStorage.getItem("fundimart_products") || "[]");
-      allProducts.push(newProduct);
+      allProducts.push(newLocalProduct);
       localStorage.setItem("fundimart_products", JSON.stringify(allProducts));
 
-      setProducts([...products, newProduct]);
+      toast.success("Product added successfully to database!");
       setIsAddingProduct(false);
-      
-      setStats(prev => ({ ...prev, activeListings: prev.activeListings + 1 }));
-      toast.success("Product added successfully!");
-    } catch (error) {
-      toast.error("Failed to add product");
+      fetchSellerProducts(); // Refresh local array
+    } catch (error: any) {
+      console.error(error);
+      toast.error(error.message || "Failed to add product");
     } finally {
       setIsLoading(false);
     }
   };
 
+  // 3. Handle Update Product in Database
   const handleUpdateProduct = async (data: Omit<Product, 'id' | 'createdAt' | 'updatedAt'>) => {
     if (!editingProduct) return;
     setIsLoading(true);
     try {
+      const token = getAuthToken();
+
+      const response = await fetch(`http://localhost:5000/api/products/${editingProduct.id}`, {
+        method: "PUT",
+        headers: {
+          "Content-Type": "application/json",
+          "Authorization": `Bearer ${token}`
+        },
+        body: JSON.stringify({
+          name: data.name,
+          price: data.price,
+          unit: data.unit,
+          stock: data.stock,
+          category: data.category,
+          description: data.description
+        })
+      });
+
+      if (!response.ok) throw new Error("Failed to update product in database");
+
+      // Update LocalStorage to keep offline sync
       const updatedProduct: Product = {
         ...editingProduct,
         ...data,
-        // Ensure critical fields are preserved and not overwritten by empty strings from form
-        sellerId: editingProduct.sellerId,
-        sellerName: editingProduct.sellerName,
-        status: data.status || editingProduct.status,
         updatedAt: Date.now(),
       };
       const allProducts = JSON.parse(localStorage.getItem("fundimart_products") || "[]");
@@ -138,27 +206,43 @@ const SellerDashboard = () => {
         allProducts[index] = updatedProduct;
         localStorage.setItem("fundimart_products", JSON.stringify(allProducts));
       }
-      setProducts(products.map((p) => (p.id === editingProduct.id ? updatedProduct : p)));
-      setEditingProduct(null);
+
       toast.success("Product updated successfully!");
-    } catch (error) {
-      toast.error("Failed to update product");
+      setEditingProduct(null);
+      fetchSellerProducts();
+    } catch (error: any) {
+      toast.error(error.message || "Failed to update product");
     } finally {
       setIsLoading(false);
     }
   };
 
+  // 4. Handle Delete Product from Database
   const handleDeleteProduct = async () => {
     if (!deletingProductId) return;
     setIsLoading(true);
     try {
+      const token = getAuthToken();
+
+      const response = await fetch(`http://localhost:5000/api/products/${deletingProductId}`, {
+        method: "DELETE",
+        headers: {
+          "Authorization": `Bearer ${token}`
+        }
+      });
+
+      if (!response.ok) throw new Error("Failed to delete product from database");
+
+      // Clean out of local storage
       const allProducts = JSON.parse(localStorage.getItem("fundimart_products") || "[]");
       const filtered = allProducts.filter((p: Product) => p.id !== deletingProductId);
       localStorage.setItem("fundimart_products", JSON.stringify(filtered));
-      setProducts(products.filter((p) => p.id !== deletingProductId));
+
+      toast.success("Product deleted successfully!");
       setDeletingProductId(null);
-      setStats(prev => ({ ...prev, activeListings: prev.activeListings - 1 }));
-      alert("Product deleted successfully!");
+      fetchSellerProducts();
+    } catch (error: any) {
+      toast.error(error.message || "Deletion failed");
     } finally {
       setIsLoading(false);
     }
@@ -336,7 +420,7 @@ const SellerDashboard = () => {
                         <Card key={product.id} className="flex flex-col overflow-hidden hover:shadow-lg transition-shadow border-border/50">
                         <div className="h-48 bg-muted overflow-hidden relative">
                             <img
-                            src={product.photos[0] || "https://via.placeholder.com/400x300?text=" + encodeURIComponent(product.name)}
+                            src={product.photos?.[0] || "https://via.placeholder.com/400x300?text=" + encodeURIComponent(product.name)}
                             alt={product.name}
                             className="w-full h-full object-cover hover:scale-105 transition-transform"
                             />
@@ -501,7 +585,7 @@ const SellerDashboard = () => {
       <AlertDialog open={!!deletingProductId} onOpenChange={() => setDeletingProductId(null)}>
         <AlertDialogContent>
           <AlertDialogHeader>
-            <AlertDialogTitle>Delete Product</AlertDialogTitle>
+            <DialogTitle>Delete Product</DialogTitle>
             <AlertDialogDescription>
               Are you sure you want to delete this product? This action cannot be undone.
             </AlertDialogDescription>
