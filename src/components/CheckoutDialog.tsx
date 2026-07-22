@@ -1,326 +1,137 @@
-import { useState } from "react";
-import { Button } from "@/components/ui/button";
-import {
-  Dialog,
-  DialogContent,
-  DialogHeader,
-  DialogTitle,
-  DialogDescription,
-} from "@/components/ui/dialog";
-import { Input } from "@/components/ui/input";
-import { useCart } from "@/contexts/CartContext";
-import { Phone, AlertCircle, MapPin, Building2, Home, ChevronRight, ChevronLeft } from "lucide-react";
-import { toast } from "sonner";
-import { Product } from "@/types/product";
-import { useNavigate } from "react-router-dom";
+import React, { useState } from "react";
+import { useCart } from "../contexts/CartContext";
+import { kenyanLocations } from "../data/kenyanLocations";
 
-interface CheckoutDialogProps {
-  isOpen: boolean;
-  onOpenChange: (open: boolean) => void;
-}
-
-const CheckoutDialog = ({ isOpen, onOpenChange }: CheckoutDialogProps) => {
-  const navigate = useNavigate();
+const CheckoutDialog = () => {
   const { items, totalPrice, clearCart } = useCart();
-  const [step, setStep] = useState<"location" | "payment">("location");
-  const [phoneNumber, setPhoneNumber] = useState("");
-  const [isLoading, setIsLoading] = useState(false);
-  const [error, setError] = useState("");
-  const [success, setSuccess] = useState(false);
+  const [phone, setPhone] = useState("");
+  const [county, setCounty] = useState("");
+  const [town, setTown] = useState("");
+  const [loading, setLoading] = useState(false);
+  const [errorMessage, setErrorMessage] = useState("");
 
-  // Delivery details
-  const [deliveryDetails, setDeliveryDetails] = useState({
-    county: "",
-    town: "",
-    address: "",
-  });
+  const API_BASE = import.meta.env.VITE_API_BASE_URL || "https://jengamart-0.onrender.com/api";
 
-  const formatPhoneNumber = (value: string) => {
-    const cleaned = value.replace(/\D/g, "");
-    if (cleaned.startsWith("254")) {
-      return cleaned;
-    } else if (cleaned.startsWith("07")) {
-      return "254" + cleaned.substring(1);
-    }
-    return cleaned;
+  // Get available towns based on selected county
+  const availableTowns = county ? kenyanLocations[county] : [];
+
+  const handleCountyChange = (e: React.ChangeEvent<HTMLSelectElement>) => {
+    setCounty(e.target.value);
+    setTown(""); // Reset town selection when county changes
   };
 
-  const isValidPhoneNumber = (number: string) => {
-    const formatted = formatPhoneNumber(number);
-    return formatted.startsWith("254") && formatted.length === 12;
-  };
-
-  const handlePhoneChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    const value = e.target.value;
-    setPhoneNumber(value);
-    setError("");
-  };
-
-  const handleLocationChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    const { name, value } = e.target;
-    setDeliveryDetails(prev => ({ ...prev, [name]: value }));
-  };
-
-  const updateStockAndRecordSale = () => {
-    try {
-      // 1. Update Product Stock
-      const allProducts: Product[] = JSON.parse(localStorage.getItem("fundimart_products") || "[]");
-      
-      const updatedProducts = allProducts.map(product => {
-        const cartItem = items.find(item => item.id === product.id);
-        if (cartItem) {
-          return {
-            ...product,
-            stock: Math.max(0, product.stock - cartItem.quantity)
-          };
-        }
-        return product;
-      });
-      
-      localStorage.setItem("fundimart_products", JSON.stringify(updatedProducts));
-
-      // 2. Record Order for Dashboards
-      const allOrders = JSON.parse(localStorage.getItem("fundimart_orders") || "[]");
-      const orderId = `order_${Date.now()}`;
-      const newOrder = {
-        id: orderId,
-        items: items,
-        totalAmount: totalPrice,
-        phoneNumber: formatPhoneNumber(phoneNumber),
-        deliveryLocation: deliveryDetails,
-        createdAt: Date.now(),
-        status: "completed"
-      };
-      
-      allOrders.push(newOrder);
-      localStorage.setItem("fundimart_orders", JSON.stringify(allOrders));
-      localStorage.setItem("last_order", JSON.stringify(newOrder));
-      
-      return newOrder;
-    } catch (err) {
-      console.error("Error updating stock/orders:", err);
-      return null;
-    }
-  };
-
-  const handleSubmit = async (e: React.FormEvent) => {
+  const handleCheckoutSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-
-    if (step === "location") {
-      if (!deliveryDetails.county || !deliveryDetails.town || !deliveryDetails.address) {
-        setError("Please fill in all delivery details");
-        return;
-      }
-      setError("");
-      setStep("payment");
+    if (!county || !town) {
+      setErrorMessage("Please select a valid County and Town from the options provided.");
       return;
     }
 
-    if (!isValidPhoneNumber(phoneNumber)) {
-      setError("Please enter a valid Kenyan phone number (07XX XXXXXX or 254...)")
-      return;
-    }
+    setLoading(true);
+    setErrorMessage("");
 
-    setIsLoading(true);
-    setError("");
+    const payload = {
+      amount: totalPrice,
+      phone: phone,
+      county: county,
+      town: town,
+      metadata: { items }
+    };
 
     try {
-      const formattedPhone = formatPhoneNumber(phoneNumber);
-      
-      // Mocking the API call
-      await new Promise(resolve => setTimeout(resolve, 1500));
+      const response = await fetch(`${API_BASE}/payments/initiate`, {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+          "Authorization": `Bearer ${localStorage.getItem("token") || ""}`
+        },
+        body: JSON.stringify(payload),
+      });
 
-      // After "successful" payment initiation, update stock and record order
-      const newOrder = updateStockAndRecordSale();
-      
-      setSuccess(true);
-      setPhoneNumber("");
-      
-      setTimeout(() => {
-        clearCart();
-        onOpenChange(false);
-        setSuccess(false);
-        setStep("location");
-        toast.success("Order placed successfully!");
-        navigate("/order-success", { state: { order: newOrder } });
-      }, 2000);
-    } catch (err) {
-      setError(err instanceof Error ? err.message : "An error occurred");
+      const data = await response.json();
+
+      if (!response.ok) {
+        throw new Error(data.message || "An error occurred during checkout processing.");
+      }
+
+      alert("Success! Check your phone for the M-Pesa push prompt.");
+      clearCart();
+    } catch (err: any) {
+      console.error("Checkout Failure:", err.message);
+      setErrorMessage(err.message);
     } finally {
-      setIsLoading(false);
+      setLoading(false);
     }
   };
 
   return (
-    <Dialog open={isOpen} onOpenChange={onOpenChange}>
-      <DialogContent className="sm:max-w-md">
-        <DialogHeader>
-          <DialogTitle>
-            {success ? "Payment Successful" : step === "location" ? "Delivery Details" : "M-Pesa Payment"}
-          </DialogTitle>
-          <DialogDescription>
-            {success 
-              ? "Your order has been confirmed." 
-              : step === "location" 
-                ? "Please provide your location information for delivery." 
-                : "Enter your M-Pesa phone number to complete payment."}
-          </DialogDescription>
-        </DialogHeader>
+    <div className="p-6 max-w-md mx-auto bg-white rounded-xl shadow-md space-y-4">
+      <h2 className="text-xl font-bold text-gray-800">Secure Delivery Checkout</h2>
+      
+      {errorMessage && (
+        <div className="bg-red-100 border border-red-400 text-red-700 px-4 py-2 rounded text-sm">
+          <strong>Error: </strong>{errorMessage}
+        </div>
+      )}
 
-        {success ? (
-          <div className="flex flex-col items-center justify-center py-8 gap-3">
-            <div className="w-12 h-12 rounded-full bg-green-100 dark:bg-green-900 flex items-center justify-center animate-bounce">
-              <span className="text-2xl text-green-600">✓</span>
-            </div>
-            <h3 className="font-semibold text-lg text-foreground">Payment Confirmed</h3>
-            <p className="text-sm text-muted-foreground text-center">
-              Redirecting you to your order details...
-            </p>
-          </div>
-        ) : (
-          <form onSubmit={handleSubmit} className="space-y-4">
-            {step === "location" ? (
-              <div className="space-y-4 animate-in fade-in slide-in-from-right-4 duration-300">
-                <div className="grid grid-cols-2 gap-4">
-                  <div className="space-y-2">
-                    <label className="text-sm font-medium text-foreground flex items-center gap-2">
-                      <Building2 className="w-4 h-4 text-primary" /> County
-                    </label>
-                    <Input
-                      name="county"
-                      placeholder="e.g. Nairobi"
-                      value={deliveryDetails.county}
-                      onChange={handleLocationChange}
-                      required
-                    />
-                  </div>
-                  <div className="space-y-2">
-                    <label className="text-sm font-medium text-foreground flex items-center gap-2">
-                      <MapPin className="w-4 h-4 text-primary" /> Town/City
-                    </label>
-                    <Input
-                      name="town"
-                      placeholder="e.g. Westlands"
-                      value={deliveryDetails.town}
-                      onChange={handleLocationChange}
-                      required
-                    />
-                  </div>
-                </div>
-                <div className="space-y-2">
-                  <label className="text-sm font-medium text-foreground flex items-center gap-2">
-                    <Home className="w-4 h-4 text-primary" /> Specific Address/Building
-                  </label>
-                  <Input
-                    name="address"
-                    placeholder="e.g. 123 Factory St, 4th Floor"
-                    value={deliveryDetails.address}
-                    onChange={handleLocationChange}
-                    required
-                  />
-                </div>
-              </div>
-            ) : (
-              <div className="space-y-4 animate-in fade-in slide-in-from-right-4 duration-300">
-                <div className="bg-primary/5 p-4 rounded-lg border border-primary/20 flex items-start gap-3">
-                  <MapPin className="w-5 h-5 text-primary shrink-0 mt-0.5" />
-                  <div>
-                    <p className="text-xs font-bold text-primary uppercase">Delivery To:</p>
-                    <p className="text-sm text-foreground">
-                      {deliveryDetails.address}, {deliveryDetails.town}, {deliveryDetails.county}
-                    </p>
-                    <button 
-                      type="button" 
-                      onClick={() => setStep("location")}
-                      className="text-xs text-primary font-semibold hover:underline mt-1"
-                    >
-                      Change Address
-                    </button>
-                  </div>
-                </div>
+      <form onSubmit={handleCheckoutSubmit} className="space-y-4">
+        {/* Phone Input */}
+        <div>
+          <label className="block text-sm font-medium text-gray-700">M-Pesa Phone Number</label>
+          <input 
+            type="text" 
+            value={phone} 
+            onChange={(e) => setPhone(e.target.value)} 
+            placeholder="07xxxxxxxx" 
+            className="w-full border p-2 rounded mt-1 bg-white focus:ring-2 focus:ring-orange-500"
+            required
+          />
+        </div>
 
-                <div className="space-y-2">
-                  <label htmlFor="phone" className="text-sm font-medium text-foreground">
-                    M-Pesa Phone Number
-                  </label>
-                  <div className="relative">
-                    <Phone className="absolute left-3 top-1/2 -translate-y-1/2 w-5 h-5 text-muted-foreground" />
-                    <Input
-                      id="phone"
-                      type="tel"
-                      placeholder="07XX XXXXXX or 254XXXXXXXXX"
-                      value={phoneNumber}
-                      onChange={handlePhoneChange}
-                      disabled={isLoading}
-                      className="pl-10"
-                      required
-                    />
-                  </div>
-                </div>
-              </div>
-            )}
+        {/* Guided County Dropdown Menu */}
+        <div>
+          <label className="block text-sm font-medium text-gray-700">Delivery County</label>
+          <select
+            value={county}
+            onChange={handleCountyChange}
+            className="w-full border p-2 rounded mt-1 bg-white focus:ring-2 focus:ring-orange-500 text-sm"
+            required
+          >
+            <option value="">-- Select Your County --</option>
+            {Object.keys(kenyanLocations).map((c) => (
+              <option key={c} value={c}>{c}</option>
+            ))}
+          </select>
+        </div>
 
-            {error && (
-              <div className="flex gap-2 p-3 rounded-lg bg-red-50 dark:bg-red-900/20 border border-red-200 dark:border-red-800">
-                <AlertCircle className="w-5 h-5 text-red-600 dark:text-red-400 flex-shrink-0 mt-0.5" />
-                <p className="text-sm text-red-600 dark:text-red-400">{error}</p>
-              </div>
-            )}
+        {/* Guided Town Dropdown Menu */}
+        <div>
+          <label className="block text-sm font-medium text-gray-700">Delivery Town / Area</label>
+          <select
+            value={town}
+            onChange={(e) => setTown(e.target.value)}
+            disabled={!county}
+            className="w-full border p-2 rounded mt-1 bg-white focus:ring-2 focus:ring-orange-500 text-sm disabled:bg-gray-100 disabled:cursor-not-allowed"
+            required
+          >
+            <option value="">
+              {county ? "-- Select Area / Town --" : "⚠️ Select a County First"}
+            </option>
+            {availableTowns.map((t) => (
+              <option key={t} value={t}>{t}</option>
+            ))}
+          </select>
+        </div>
 
-            <div className="bg-secondary/50 p-4 rounded-lg space-y-2 border border-border">
-              <div className="flex justify-between text-sm">
-                <span className="text-muted-foreground">Total to Pay</span>
-                <span className="font-bold text-foreground">
-                  KES {totalPrice.toLocaleString()}
-                </span>
-              </div>
-              {step === "payment" && (
-                <p className="text-[10px] text-muted-foreground uppercase tracking-wider font-semibold">
-                  M-Pesa prompt will be sent to your phone
-                </p>
-              )}
-            </div>
-
-            <div className="flex gap-3 pt-2">
-              {step === "payment" ? (
-                <Button
-                  type="button"
-                  variant="outline"
-                  className="flex-1"
-                  onClick={() => setStep("location")}
-                  disabled={isLoading}
-                >
-                  <ChevronLeft className="w-4 h-4 mr-2" /> Back
-                </Button>
-              ) : (
-                <Button
-                  type="button"
-                  variant="outline"
-                  className="flex-1"
-                  onClick={() => onOpenChange(false)}
-                >
-                  Cancel
-                </Button>
-              )}
-              
-              <Button
-                type="submit"
-                className="flex-1"
-                disabled={isLoading}
-              >
-                {isLoading ? (
-                  "Processing..."
-                ) : step === "location" ? (
-                  <>Continue <ChevronRight className="w-4 h-4 ml-2" /></>
-                ) : (
-                  "Pay Now"
-                )}
-              </Button>
-            </div>
-          </form>
-        )}
-      </DialogContent>
-    </Dialog>
+        <button 
+          type="submit" 
+          disabled={loading}
+          className="w-full bg-orange-500 hover:bg-orange-600 text-white p-2.5 rounded-lg font-bold transition-colors disabled:bg-gray-400 mt-2"
+        >
+          {loading ? "Processing Securely..." : `Pay KES ${totalPrice.toLocaleString()}`}
+        </button>
+      </form>
+    </div>
   );
 };
 
